@@ -4,9 +4,9 @@ public class QuestionAndAnswer {
     private final String Question;
     private final String Answer;
 
-    public QuestionAndAnswer(String question, String answer) {
-        Question = question;
-        Answer = answer;
+    public QuestionAndAnswer(String Question, String Answer) {
+        this.Question = Question;
+        this.Answer = Answer;
     }
 
     public String getQuestion() {

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Класс QuestionAndAnswer")
-public class QuestionAndAnswerTest {
+class QuestionAndAnswerTest {
 
     @DisplayName("корректно создаётся конструктором")
     @Test

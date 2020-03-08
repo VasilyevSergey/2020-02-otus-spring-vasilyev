@@ -1,50 +1,58 @@
 package ru.otus.homework.service;
 
 import ru.otus.homework.dao.QuestionAndAnswerDAO;
+import ru.otus.homework.domain.Person;
 import ru.otus.homework.domain.QuestionAndAnswer;
+import ru.otus.homework.exceptions.QuestionsLoadingException;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class QuestionAndAnswerServiceImpl implements QuestionAndAnswerService {
 
     private final QuestionAndAnswerDAO dao;
+    private final InputOutputServiceImpl ioService;
+    private final PersonServiceImpl personService;
 
-    public QuestionAndAnswerServiceImpl(QuestionAndAnswerDAO dao) {
+    public QuestionAndAnswerServiceImpl(QuestionAndAnswerDAO dao,
+                                        InputOutputServiceImpl ioService,
+                                        PersonServiceImpl personService) {
         this.dao = dao;
+        this.ioService = ioService;
+        this.personService = personService;
+    }
+
+    private List<QuestionAndAnswer> getQuestionAndAnswerList() throws QuestionsLoadingException {
+        List<QuestionAndAnswer> questionAndAnswerList;
+        questionAndAnswerList = dao.questionAndAnswerList();
+        return questionAndAnswerList;
     }
 
     @Override
     public void startTest() {
-        Scanner in = new Scanner(System.in);
+        List<QuestionAndAnswer> questionAndAnswerList = new ArrayList<>();
 
-        List<QuestionAndAnswer> questionAndAnswerList = null;
         try {
-            questionAndAnswerList = dao.questionAndAnswerList();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+            questionAndAnswerList = getQuestionAndAnswerList();
+        } catch (QuestionsLoadingException e) {
+            ioService.showMessage(e.getMessage() + e.getCause());
         }
 
-        System.out.println("Test");
-        System.out.println("Enter your first and last name");
-        String firstName = in.next();
-        String LastName = in.next();
+        ioService.showMessage("Test");
+        Person person = personService.getPerson();
 
         int counterOfCorrectAnswers = 0;
         for (QuestionAndAnswer qna : questionAndAnswerList) {
-            System.out.println(qna.getQuestion());
-            String userAnswer = in.next();
-            if (userAnswer.equals(qna.getAnswer())) {
+            ioService.showMessage(qna.getQuestion());
+            String personAnswer = ioService.getMessage();
+            if (personAnswer.equals(qna.getAnswer())) {
                 counterOfCorrectAnswers++;
             }
         }
-        in.close();
 
-        System.out.println(String.format(
+        ioService.showMessage(String.format(
                 "%s, your result is %d/%d",
-                firstName + " " + LastName,
+                person.getFirstName() + " " + person.getLastName(),
                 counterOfCorrectAnswers,
                 questionAndAnswerList.size()));
     }

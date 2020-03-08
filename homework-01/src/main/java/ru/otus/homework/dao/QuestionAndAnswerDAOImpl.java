@@ -2,8 +2,8 @@ package ru.otus.homework.dao;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import ru.otus.homework.Main;
 import ru.otus.homework.domain.QuestionAndAnswer;
+import ru.otus.homework.exceptions.QuestionsLoadingException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,8 +23,8 @@ public class QuestionAndAnswerDAOImpl implements QuestionAndAnswerDAO {
     private static final String ANSWER = "Answer";
 
     @Override
-    public List<QuestionAndAnswer> questionAndAnswerList() throws IOException {
-        ClassLoader cLoader = Main.class.getClassLoader();
+    public List<QuestionAndAnswer> questionAndAnswerList() throws QuestionsLoadingException {
+        ClassLoader cLoader = this.getClass().getClassLoader();
         URL url = cLoader.getResource(pathToCSV);
 
         CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader(FILE_HEADER_DEFAULT);
@@ -36,12 +36,15 @@ public class QuestionAndAnswerDAOImpl implements QuestionAndAnswerDAO {
             questionsAndAnswerList = parser.getRecords().stream().map(csvRecord -> {
                 return new QuestionAndAnswer(csvRecord.get(QUESTION), csvRecord.get(ANSWER));
             }).collect(Collectors.toList());
-        } catch (IllegalArgumentException e) {
-            System.out.println(String.format("Ошибка при чтении csv файла: %s", e.getMessage()));
-            throw e;
+        } catch (IllegalArgumentException | IOException e) {
+            throw new QuestionsLoadingException(String.format("Ошибка при чтении csv файла: %s", e.getMessage()), e.getCause());
         } finally {
             if (parser != null) {
-                parser.close();
+                try {
+                    parser.close();
+                } catch (IOException e) {
+                    throw new QuestionsLoadingException("Ошибка при закритии парсера", e.getCause());
+                }
             }
         }
 

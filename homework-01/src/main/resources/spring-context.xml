@@ -8,7 +8,16 @@
         <constructor-arg name="pathToCSV" value="QuestionsAndAnswers.csv"/>
     </bean>
 
+    <bean id="inputOutputService" class="ru.otus.homework.service.InputOutputServiceImpl">
+    </bean>
+
+    <bean id="personService" class="ru.otus.homework.service.PersonServiceImpl">
+        <constructor-arg name="ioService" ref="inputOutputService"/>
+    </bean>
+
     <bean id="questionAndAnswerService" class="ru.otus.homework.service.QuestionAndAnswerServiceImpl">
         <constructor-arg name="dao" ref="questionAndAnswerDAO"/>
+        <constructor-arg name="ioService" ref="inputOutputService"/>
+        <constructor-arg name="personService" ref="personService"/>
     </bean>
 </beans>

@@ -36,6 +36,7 @@ public class QuestionAndAnswerServiceImpl implements QuestionAndAnswerService {
             questionAndAnswerList = getQuestionAndAnswerList();
         } catch (QuestionsLoadingException e) {
             ioService.showMessage(e.getMessage() + e.getCause());
+            return;
         }
 
         ioService.showMessage("Test");

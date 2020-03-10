@@ -1,19 +1,19 @@
 package ru.otus.homework.domain;
 
 public class QuestionAndAnswer {
-    private final String Question;
-    private final String Answer;
+    private final String question;
+    private final String answer;
 
     public QuestionAndAnswer(String Question, String Answer) {
-        this.Question = Question;
-        this.Answer = Answer;
+        this.question = Question;
+        this.answer = Answer;
     }
 
     public String getQuestion() {
-        return Question;
+        return question;
     }
 
     public String getAnswer() {
-        return Answer;
+        return answer;
     }
 }

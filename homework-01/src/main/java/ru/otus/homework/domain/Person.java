@@ -1,19 +1,19 @@
 package ru.otus.homework.domain;
 
 public class Person {
-    private final String FirstName;
-    private final String LastName;
+    private final String firstName;
+    private final String lastName;
 
     public Person(String firstName, String lastName) {
-        FirstName = firstName;
-        LastName = lastName;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class QuestionAndAnswerDAOImpl implements QuestionAndAnswerDAO {
-    private String pathToCSV;
+    private final String pathToCSV;
 
     public QuestionAndAnswerDAOImpl(String pathToCSV) {
         this.pathToCSV = pathToCSV;

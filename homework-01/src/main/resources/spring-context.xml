@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean id="questionAndAnswerDAO" class="ru.otus.homework.dao.QuestionAndAnswerDAOImpl">
         <constructor-arg name="pathToCSV" value="QuestionsAndAnswers.csv"/>
     </bean>
 
+    <util:constant id="IN_STREAM" static-field="java.lang.System.in"/>
+    <util:constant id="OUT_STREAM" static-field="java.lang.System.out"/>
+
     <bean id="inputOutputService" class="ru.otus.homework.service.InputOutputServiceImpl">
+        <constructor-arg name="inStream" ref="IN_STREAM"/>
+        <constructor-arg name="outStream" ref="OUT_STREAM"/>
     </bean>
 
     <bean id="personService" class="ru.otus.homework.service.PersonServiceImpl">

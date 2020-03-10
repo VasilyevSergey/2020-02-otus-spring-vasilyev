@@ -1,25 +1,26 @@
 package ru.otus.homework.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.homework.domain.Person;
 
 @Service
 public class PersonServiceImpl implements PersonService {
 
-    private InputOutputServiceImpl ioService;
+    private final InputOutputServiceImpl ioService;
+    private final LocalizationServiceImpl localizationService;
 
-    @Autowired
-    public PersonServiceImpl(InputOutputServiceImpl ioService) {
+    public PersonServiceImpl(InputOutputServiceImpl ioService,
+                             LocalizationServiceImpl localizationService) {
         this.ioService = ioService;
+        this.localizationService = localizationService;
     }
 
     @Override
     public Person getPerson() {
-        ioService.showMessage("Enter your first name");
+        ioService.showMessage(localizationService.localizeMessage("test.firstName", null));
         String firstName = ioService.getMessage();
 
-        ioService.showMessage("Enter your last name");
+        ioService.showMessage(localizationService.localizeMessage("test.lastName", null));
         String lastName = ioService.getMessage();
 
         return new Person(firstName, lastName);

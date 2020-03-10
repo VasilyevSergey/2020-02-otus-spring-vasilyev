@@ -15,23 +15,29 @@ import java.util.stream.Collectors;
 
 @Repository
 public class QuestionAndAnswerDAOImpl implements QuestionAndAnswerDAO {
-    @Value("${qna.filepath}")
-    private String pathToCSV;
 
-    @Value("${locale}")
-    private String locale;
-
-    public QuestionAndAnswerDAOImpl() {
-    }
+    private final String pathToLocalCSV;
 
     private static final String[] FILE_HEADER_DEFAULT = {"Question", "Answer"};
     private static final String QUESTION = "Question";
     private static final String ANSWER = "Answer";
 
+    public QuestionAndAnswerDAOImpl(@Value("${qna.filepath}") String pathToCSV,
+                                    @Value("${language.tag}") String languageTag) {
+
+        String pathToLocalCSV = pathToCSV;
+
+        if (!languageTag.equals("")) {
+            pathToLocalCSV = pathToCSV.replace(".csv", String.format("_%s.csv", languageTag.replace("-", "_")));
+        }
+
+        this.pathToLocalCSV = pathToLocalCSV;
+    }
+
     @Override
     public List<QuestionAndAnswer> questionAndAnswerList() throws QuestionsLoadingException {
         ClassLoader cLoader = this.getClass().getClassLoader();
-        URL url = cLoader.getResource(pathToCSV);
+        URL url = cLoader.getResource(pathToLocalCSV);
 
         CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader(FILE_HEADER_DEFAULT);
 

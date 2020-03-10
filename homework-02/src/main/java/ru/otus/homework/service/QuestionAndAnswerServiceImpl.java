@@ -1,6 +1,5 @@
 package ru.otus.homework.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.homework.dao.QuestionAndAnswerDAO;
 import ru.otus.homework.domain.Person;
@@ -13,12 +12,11 @@ import java.util.List;
 @Service
 public class QuestionAndAnswerServiceImpl implements QuestionAndAnswerService {
 
-    private QuestionAndAnswerDAO dao;
-    private InputOutputServiceImpl ioService;
-    private PersonServiceImpl personService;
-    private LocalizationServiceImpl localizationService;
+    private final QuestionAndAnswerDAO dao;
+    private final InputOutputServiceImpl ioService;
+    private final PersonServiceImpl personService;
+    private final LocalizationServiceImpl localizationService;
 
-    @Autowired
     public QuestionAndAnswerServiceImpl(QuestionAndAnswerDAO dao,
                                         InputOutputServiceImpl ioService,
                                         PersonServiceImpl personService,
@@ -43,9 +41,11 @@ public class QuestionAndAnswerServiceImpl implements QuestionAndAnswerService {
             questionAndAnswerList = getQuestionAndAnswerList();
         } catch (QuestionsLoadingException e) {
             ioService.showMessage(e.getMessage() + e.getCause());
+            return;
         }
 
-        ioService.showMessage(localizationService.localizeMessage("test.name"));
+        ioService.showMessage(localizationService.localizeMessage("test.name", null));
+
         Person person = personService.getPerson();
 
         int counterOfCorrectAnswers = 0;
@@ -57,10 +57,14 @@ public class QuestionAndAnswerServiceImpl implements QuestionAndAnswerService {
             }
         }
 
-        ioService.showMessage(String.format(
-                "%s, your result is %d/%d",
-                person.getFirstName() + " " + person.getLastName(),
-                counterOfCorrectAnswers,
-                questionAndAnswerList.size()));
+        ioService.showMessage(
+                localizationService.localizeMessage(
+                        "test.result",
+                        new Object[]{
+                                person.getFirstName() + " " + person.getLastName(),
+                                String.valueOf(counterOfCorrectAnswers),
+                                String.valueOf(questionAndAnswerList.size())
+                        }
+                ));
     }
 }

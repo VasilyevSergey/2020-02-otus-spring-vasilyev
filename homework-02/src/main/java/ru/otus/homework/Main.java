@@ -2,7 +2,6 @@ package ru.otus.homework;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import ru.otus.homework.service.QuestionAndAnswerService;
 

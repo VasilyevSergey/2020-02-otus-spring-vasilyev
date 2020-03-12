@@ -16,6 +16,10 @@ public class LocalizationServiceImpl implements LocalizationService {
 
     private final Locale locale;
 
+    public Locale getLocale() {
+        return locale;
+    }
+
     public LocalizationServiceImpl(@Value("${language.tag}") String languageTag) {
         this.locale = Locale.forLanguageTag(languageTag);
     }

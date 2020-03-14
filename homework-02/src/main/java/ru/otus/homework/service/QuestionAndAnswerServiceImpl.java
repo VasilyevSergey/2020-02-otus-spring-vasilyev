@@ -6,21 +6,20 @@ import ru.otus.homework.domain.Person;
 import ru.otus.homework.domain.QuestionAndAnswer;
 import ru.otus.homework.exceptions.QuestionsLoadingException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class QuestionAndAnswerServiceImpl implements QuestionAndAnswerService {
 
     private final QuestionAndAnswerDAO dao;
-    private final InputOutputServiceImpl ioService;
-    private final PersonServiceImpl personService;
-    private final LocalizationServiceImpl localizationService;
+    private final InputOutputService ioService;
+    private final PersonService personService;
+    private final LocalizationService localizationService;
 
     public QuestionAndAnswerServiceImpl(QuestionAndAnswerDAO dao,
-                                        InputOutputServiceImpl ioService,
-                                        PersonServiceImpl personService,
-                                        LocalizationServiceImpl localizationService) {
+                                        InputOutputService ioService,
+                                        PersonService personService,
+                                        LocalizationService localizationService) {
         this.dao = dao;
         this.ioService = ioService;
         this.personService = personService;
@@ -35,7 +34,7 @@ public class QuestionAndAnswerServiceImpl implements QuestionAndAnswerService {
 
     @Override
     public void startTest() {
-        List<QuestionAndAnswer> questionAndAnswerList = new ArrayList<>();
+        List<QuestionAndAnswer> questionAndAnswerList;
 
         try {
             questionAndAnswerList = getQuestionAndAnswerList();
@@ -44,7 +43,7 @@ public class QuestionAndAnswerServiceImpl implements QuestionAndAnswerService {
             return;
         }
 
-        ioService.showMessage(localizationService.localizeMessage("test.name", null));
+        ioService.showMessage(localizationService.localizeMessage("test.name"));
 
         Person person = personService.getPerson();
 
@@ -60,11 +59,9 @@ public class QuestionAndAnswerServiceImpl implements QuestionAndAnswerService {
         ioService.showMessage(
                 localizationService.localizeMessage(
                         "test.result",
-                        new Object[]{
-                                person.getFirstName() + " " + person.getLastName(),
-                                String.valueOf(counterOfCorrectAnswers),
-                                String.valueOf(questionAndAnswerList.size())
-                        }
+                        person.getFirstName() + " " + person.getLastName(),
+                        String.valueOf(counterOfCorrectAnswers),
+                        String.valueOf(questionAndAnswerList.size())
                 ));
     }
 }

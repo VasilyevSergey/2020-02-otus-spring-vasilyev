@@ -1,30 +1,25 @@
 package ru.otus.homework.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import ru.otus.homework.domain.Settings;
 
 import java.util.Locale;
 
 @Service
 public class LocalizationServiceImpl implements LocalizationService {
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
+    private final Settings settings;
 
-    private final Locale locale;
-
-    public Locale getLocale() {
-        return locale;
+    public LocalizationServiceImpl(MessageSource messageSource,
+                                   Settings settings) {
+        this.messageSource = messageSource;
+        this.settings = settings;
     }
 
-    public LocalizationServiceImpl(@Value("${language.tag}") String languageTag) {
-        this.locale = Locale.forLanguageTag(languageTag);
-    }
-
-    public String localizeMessage(String bundleCode, @Nullable Object[] var2) {
-        return messageSource.getMessage(bundleCode, var2, locale);
+    public String localizeMessage(String bundleCode, @Nullable Object... args) {
+        return messageSource.getMessage(bundleCode, args, Locale.forLanguageTag(settings.getLanguageTag()));
     }
 }

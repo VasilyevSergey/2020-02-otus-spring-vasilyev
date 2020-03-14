@@ -6,21 +6,21 @@ import ru.otus.homework.domain.Person;
 @Service
 public class PersonServiceImpl implements PersonService {
 
-    private final InputOutputServiceImpl ioService;
-    private final LocalizationServiceImpl localizationService;
+    private final InputOutputService ioService;
+    private final LocalizationService localizationService;
 
-    public PersonServiceImpl(InputOutputServiceImpl ioService,
-                             LocalizationServiceImpl localizationService) {
+    public PersonServiceImpl(InputOutputService ioService,
+                             LocalizationService localizationService) {
         this.ioService = ioService;
         this.localizationService = localizationService;
     }
 
     @Override
     public Person getPerson() {
-        ioService.showMessage(localizationService.localizeMessage("test.firstName", null));
+        ioService.showMessage(localizationService.localizeMessage("test.firstName"));
         String firstName = ioService.getMessage();
 
-        ioService.showMessage(localizationService.localizeMessage("test.lastName", null));
+        ioService.showMessage(localizationService.localizeMessage("test.lastName"));
         String lastName = ioService.getMessage();
 
         return new Person(firstName, lastName);

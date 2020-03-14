@@ -2,9 +2,9 @@ package ru.otus.homework.dao;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import ru.otus.homework.domain.QuestionAndAnswer;
+import ru.otus.homework.domain.Settings;
 import ru.otus.homework.exceptions.QuestionsLoadingException;
 
 import java.io.IOException;
@@ -22,13 +22,14 @@ public class QuestionAndAnswerDAOImpl implements QuestionAndAnswerDAO {
     private static final String QUESTION = "Question";
     private static final String ANSWER = "Answer";
 
-    public QuestionAndAnswerDAOImpl(@Value("${qna.filepath}") String pathToCSV,
-                                    @Value("${language.tag}") String languageTag) {
+    public QuestionAndAnswerDAOImpl(Settings settings) {
+        String pathToLocalCSV;
 
-        String pathToLocalCSV = pathToCSV;
-
-        if (!languageTag.equals("")) {
-            pathToLocalCSV = pathToCSV.replace(".csv", String.format("_%s.csv", languageTag.replace("-", "_")));
+        if (settings.getLanguageTag().equals("")) {
+            pathToLocalCSV = settings.getPathToCSV();
+        } else {
+            pathToLocalCSV = settings.getPathToCSV().replace(".csv",
+                    String.format("_%s.csv", settings.getLanguageTag().replace("-", "_")));
         }
 
         this.pathToLocalCSV = pathToLocalCSV;

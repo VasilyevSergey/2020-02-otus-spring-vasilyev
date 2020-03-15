@@ -35,6 +35,10 @@ public class QuestionAndAnswerDAOImpl implements QuestionAndAnswerDAO {
         this.pathToLocalCSV = pathToLocalCSV;
     }
 
+    public String getPathToLocalCSV() {
+        return pathToLocalCSV;
+    }
+
     @Override
     public List<QuestionAndAnswer> questionAndAnswerList() throws QuestionsLoadingException {
         ClassLoader cLoader = this.getClass().getClassLoader();

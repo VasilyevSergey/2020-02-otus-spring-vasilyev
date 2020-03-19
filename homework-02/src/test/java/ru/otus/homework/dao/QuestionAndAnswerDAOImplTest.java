@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.homework.domain.QuestionAndAnswer;
-import ru.otus.homework.domain.Settings;
+import ru.otus.homework.config.Settings;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,11 +27,8 @@ public class QuestionAndAnswerDAOImplTest {
 
     @BeforeEach
     void setUp() {
-        given(settings.getLanguageTag())
-                .willReturn("ru-RU");
-
-        given(settings.getPathToCSV())
-                .willReturn("csv/QuestionsAndAnswers.csv");
+        given(settings.getPathToLocalCSV())
+                .willReturn("csv/QuestionsAndAnswers_ru_RU.csv");
 
         dao = new QuestionAndAnswerDAOImpl(settings);
     }

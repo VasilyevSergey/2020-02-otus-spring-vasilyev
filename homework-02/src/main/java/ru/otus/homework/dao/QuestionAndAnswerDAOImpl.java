@@ -4,7 +4,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.springframework.stereotype.Repository;
 import ru.otus.homework.domain.QuestionAndAnswer;
-import ru.otus.homework.domain.Settings;
+import ru.otus.homework.config.Settings;
 import ru.otus.homework.exceptions.QuestionsLoadingException;
 
 import java.io.IOException;
@@ -23,16 +23,7 @@ public class QuestionAndAnswerDAOImpl implements QuestionAndAnswerDAO {
     private static final String ANSWER = "Answer";
 
     public QuestionAndAnswerDAOImpl(Settings settings) {
-        String pathToLocalCSV;
-
-        if (settings.getLanguageTag().equals("")) {
-            pathToLocalCSV = settings.getPathToCSV();
-        } else {
-            pathToLocalCSV = settings.getPathToCSV().replace(".csv",
-                    String.format("_%s.csv", settings.getLanguageTag().replace("-", "_")));
-        }
-
-        this.pathToLocalCSV = pathToLocalCSV;
+        this.pathToLocalCSV = settings.getPathToLocalCSV();
     }
 
     public String getPathToLocalCSV() {

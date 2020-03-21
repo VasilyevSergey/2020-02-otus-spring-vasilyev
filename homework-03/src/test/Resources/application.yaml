@@ -1,0 +1,3 @@
+application:
+  pathToCSV: csv/QuestionsAndAnswers.csv
+  languageTag: ru-RU

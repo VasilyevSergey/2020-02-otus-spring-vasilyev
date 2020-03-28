@@ -5,3 +5,5 @@ target/
 
 .mvn/
 mvnw*
+
+spring-shell.log

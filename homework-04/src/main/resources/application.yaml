@@ -1,0 +1,8 @@
+application:
+  pathToCSV: csv/QuestionsAndAnswers.csv
+  languageTag: ru-RU
+
+spring:
+  messages:
+    basename: messages
+    encoding: UTF-8

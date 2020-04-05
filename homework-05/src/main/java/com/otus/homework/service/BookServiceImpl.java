@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class BookServiceImpl implements BookService {
     private static final String BOOK_ALREADY_EXIST = "Книга с id '%d' уже существует";
-    private static final String BOOK_NOT_FOUNT = "Книга с id '%d' не найдена";
+    private static final String BOOK_NOT_FOUND = "Книга с id '%d' не найдена";
     private final BookDao bookDao;
     private final AuthorService authorService;
     private final GenreService genreService;
@@ -48,7 +48,7 @@ public class BookServiceImpl implements BookService {
         try {
             return bookDao.getById(id);
         } catch (DataAccessException e) {
-            throw new DataLoadingException(String.format(BOOK_NOT_FOUNT, id), e.getCause());
+            throw new DataLoadingException(String.format(BOOK_NOT_FOUND, id), e.getCause());
         }
     }
 
@@ -57,7 +57,7 @@ public class BookServiceImpl implements BookService {
         try {
             bookDao.deleteById(id);
         } catch (DataAccessException e) {
-            throw new DataLoadingException(String.format(BOOK_NOT_FOUNT, id), e.getCause());
+            throw new DataLoadingException(String.format(BOOK_NOT_FOUND, id), e.getCause());
         }
     }
 
@@ -70,10 +70,9 @@ public class BookServiceImpl implements BookService {
     public void updateById(Long id, String newTitle, Long newAuthorId, Long newGenreId) throws DataLoadingException {
         Author newAuthor = authorService.getById(newAuthorId);
         Genre newGenre = genreService.getById(newGenreId);
-        try {
-            bookDao.updateById(id, newTitle, newAuthor, newGenre);
-        } catch (DataAccessException e) {
-            throw new DataLoadingException(String.format(BOOK_NOT_FOUNT, id), e.getCause());
+        int numberOfRowsAffected = bookDao.updateById(id, newTitle, newAuthor, newGenre);
+        if (numberOfRowsAffected == 0) {
+            throw new DataLoadingException(String.format(BOOK_NOT_FOUND, id), new Exception().getCause());
         }
     }
 }

@@ -49,7 +49,7 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public void updateById(Long id, String newTitle, Author newAuthor, Genre newGenre) {
+    public int updateById(Long id, String newTitle, Author newAuthor, Genre newGenre) {
         Map<String, Object> params = Map.of(
                 ID, id,
                 TITLE, newTitle,
@@ -57,7 +57,7 @@ public class BookDaoJdbc implements BookDao {
                 GENRE_ID, newGenre.getId()
         );
 
-        namedJdbc.update(
+        return namedJdbc.update(
                 "update books set title = :title, author_id = :author_id, genre_id = :genre_id where id = :id",
                 params);
     }

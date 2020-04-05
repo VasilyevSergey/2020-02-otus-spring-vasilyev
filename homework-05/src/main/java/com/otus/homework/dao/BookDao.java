@@ -12,7 +12,7 @@ public interface BookDao {
 
     void insert(Book book);
 
-    void updateById(Long id, String newTitle, Author newAuthor, Genre newGenre);
+    int updateById(Long id, String newTitle, Author newAuthor, Genre newGenre);
 
     Book getById(Long id);
 

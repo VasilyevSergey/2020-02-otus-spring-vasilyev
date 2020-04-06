@@ -24,11 +24,12 @@ import static org.mockito.Mockito.*;
 class AuthorServiceImplTest {
 
     private static final String AUTHOR_NOT_FOUND = "Автор с id '%d' не найден";
-    private static final String AUTHOR_EXIST = "Автор с id '%d' уже существует";
+    private static final String ERROR_INSERT = "При добавлении автора '%s' произошла ошибка";
     private static final int EXPECTED_AUTHOR_COUNT = 1;
     private static final long TEST_AUTHOR_ID = 1L;
     private static final String TEST_AUTHOR_NAME = "test author name";
     private static final Author TEST_AUTHOR = new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME);
+    private static final Author NEW_AUTHOR = new Author(null, TEST_AUTHOR_NAME);
     private static final String TEST_EXCEPTION_MESSAGE = "Exception message";
 
     @MockBean
@@ -72,8 +73,8 @@ class AuthorServiceImplTest {
     @DisplayName("добавлять автора")
     @Test
     void shouldInsertAuthor() {
-        service.insert(TEST_AUTHOR_ID, TEST_AUTHOR_NAME);
-        verify(dao, times(1)).insert(TEST_AUTHOR);
+        service.insert(TEST_AUTHOR_NAME);
+        verify(dao, times(1)).insert(NEW_AUTHOR);
     }
 
     @DisplayName("кидать исключение, если нельзя добавить автора")
@@ -82,9 +83,9 @@ class AuthorServiceImplTest {
         doThrow(RecoverableDataAccessException.class).when(dao).insert(isA(Author.class));
 
         Throwable thrown = assertThrows(DataLoadingException.class, () -> {
-            service.insert(TEST_AUTHOR_ID, TEST_AUTHOR_NAME);
+            service.insert(TEST_AUTHOR_NAME);
         });
-        assertThat(thrown.getMessage()).isEqualTo(String.format(AUTHOR_EXIST, TEST_AUTHOR_ID));
+        assertThat(thrown.getMessage()).isEqualTo(String.format(ERROR_INSERT, TEST_AUTHOR_NAME));
     }
 
     @SneakyThrows

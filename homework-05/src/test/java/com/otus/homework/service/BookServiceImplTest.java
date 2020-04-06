@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class BookServiceImplTest {
 
-    private static final String BOOK_ALREADY_EXIST = "Книга с id '%d' уже существует";
+    private static final String BOOK_ALREADY_EXIST = "Книга %s уже существует";
     private static final String BOOK_NOT_FOUND = "Книга с id '%d' не найдена";
     private static final int EXPECTED_BOOK_COUNT = 1;
     private static final long TEST_AUTHOR_ID = 1L;
@@ -39,6 +39,7 @@ class BookServiceImplTest {
     private static final long TEST_BOOK_ID = 1L;
     private static final String TEST_BOOK_TITLE = "test book title";
     private static final Book TEST_BOOK = new Book(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR, TEST_GENRE);
+    private static final Book NEW_BOOK = new Book(null, TEST_BOOK_TITLE, TEST_AUTHOR, TEST_GENRE);
 
     private static final String TEST_EXCEPTION_MESSAGE = "Exception message";
 
@@ -97,19 +98,26 @@ class BookServiceImplTest {
         given(genreService.getById(isA(Long.class)))
                 .willReturn(TEST_GENRE);
 
-        bookService.insert(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);
-        verify(bookDao, times(1)).insert(TEST_BOOK);
+        bookService.insert(TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);
+        verify(bookDao, times(1)).insert(NEW_BOOK);
     }
 
+    @SneakyThrows
     @DisplayName("кидать исключение при добавлении книги, если книга уже существует")
     @Test
     void shouldThrowExceptionWhileInsertIfBookAlreadyExist() {
+        given(authorService.getById(isA(Long.class)))
+                .willReturn(TEST_AUTHOR);
+
+        given(genreService.getById(isA(Long.class)))
+                .willReturn(TEST_GENRE);
+
         doThrow(RecoverableDataAccessException.class).when(bookDao).insert(isA(Book.class));
 
         Throwable thrown = assertThrows(DataLoadingException.class, () -> {
-            bookService.insert(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);
+            bookService.insert(TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);
         });
-        assertThat(thrown.getMessage()).isEqualTo(String.format(BOOK_ALREADY_EXIST, TEST_BOOK_ID));
+        assertThat(thrown.getMessage()).isEqualTo(String.format(BOOK_ALREADY_EXIST, NEW_BOOK.toString()));
     }
 
     @SneakyThrows
@@ -153,17 +161,17 @@ class BookServiceImplTest {
         given(genreService.getById(isA(Long.class)))
                 .willReturn(TEST_GENRE);
 
-        given(bookDao.updateById(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR, TEST_GENRE))
+        given(bookDao.update(TEST_BOOK))
                 .willReturn(1);
 
         bookService.updateById(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);
-        verify(bookDao, times(1)).updateById(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR, TEST_GENRE);
+        verify(bookDao, times(1)).update(TEST_BOOK);
     }
 
     @DisplayName("кидать исключение при обновлении книги, если книга не найдена")
     @Test
     void shouldThrowExceptionWhileUpdateIdIfBookNotFound() {
-        doThrow(RecoverableDataAccessException.class).when(bookDao).updateById(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR, TEST_GENRE);
+        doThrow(RecoverableDataAccessException.class).when(bookDao).update(TEST_BOOK);
 
         Throwable thrown = assertThrows(DataLoadingException.class, () -> {
             bookService.updateById(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);

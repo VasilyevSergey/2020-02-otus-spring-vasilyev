@@ -17,9 +17,9 @@ public class BookCommands {
     }
 
     @ShellMethod(value = "insert book", key = {"ib", "insert book"})
-    public String insert(Long id, String title, Long authorId, Long genreId) {
+    public String insert(String title, Long authorId, Long genreId) {
         try {
-            service.insert(id, title, authorId, genreId);
+            service.insert(title, authorId, genreId);
             return String.format("Книга '%s' добавлена", title);
         } catch (DataLoadingException e) {
             return e.getMessage();

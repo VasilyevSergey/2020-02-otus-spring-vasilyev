@@ -17,9 +17,9 @@ public class GenreCommands {
     }
 
     @ShellMethod(value = "insert genre", key = {"ig", "insert genre"})
-    public String insert(Long id, String name) {
+    public String insert(String name) {
         try {
-            service.insert(id, name);
+            service.insert(name);
             return String.format("Жанр '%s' добавлен", name);
         } catch (DataLoadingException e) {
             return e.getMessage();

@@ -1,8 +1,6 @@
 package com.otus.homework.dao;
 
-import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
-import com.otus.homework.domain.Genre;
 
 import java.util.List;
 
@@ -12,7 +10,7 @@ public interface BookDao {
 
     void insert(Book book);
 
-    int updateById(Long id, String newTitle, Author newAuthor, Genre newGenre);
+    int update(Book book);
 
     Book getById(Long id);
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
-    private static final String AUTHOR_EXIST = "Автор с id '%d' уже существует";
+    private static final String ERROR_INSERT = "При добавлении автора '%s' произошла ошибка";
     private static final String AUTHOR_NOT_FOUND = "Автор с id '%d' не найден";
     private final AuthorDao authorDao;
 
@@ -24,12 +24,12 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void insert(Long id, String name) throws DataLoadingException {
-        Author author = new Author(id, name);
+    public void insert(String name) throws DataLoadingException {
+        Author author = new Author(null, name);
         try {
             authorDao.insert(author);
         } catch (DataAccessException e) {
-            throw new DataLoadingException(String.format(AUTHOR_EXIST, id), e.getCause());
+            throw new DataLoadingException(String.format(ERROR_INSERT, name), e.getCause());
         }
     }
 

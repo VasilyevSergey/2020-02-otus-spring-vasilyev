@@ -3,7 +3,6 @@ package com.otus.homework.dao;
 import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
 import com.otus.homework.domain.Genre;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
@@ -23,38 +22,35 @@ public class BookDaoJdbc implements BookDao {
     private static final String GENRE_NAME = "genre_name";
     private static final String AUTHOR_NAME = "author_name";
 
-    private final JdbcOperations jdbc;
     private final NamedParameterJdbcOperations namedJdbc;
 
-    public BookDaoJdbc(JdbcOperations jdbcOperations, NamedParameterJdbcOperations namedJdbc) {
-        this.jdbc = jdbcOperations;
+    public BookDaoJdbc(NamedParameterJdbcOperations namedJdbc) {
         this.namedJdbc = namedJdbc;
     }
 
     @Override
     public int count() {
-        return jdbc.queryForObject("select count(*) from books", Integer.class);
+        return namedJdbc.getJdbcOperations().queryForObject("select count(*) from books", Integer.class);
     }
 
     @Override
     public void insert(Book book) {
         Map<String, Object> params = Map.of(
-                ID, book.getId(),
                 TITLE, book.getTitle(),
                 AUTHOR_ID, book.getAuthor().getId(),
                 GENRE_ID, book.getGenre().getId()
         );
 
-        namedJdbc.update("insert into books(id, title, author_id, genre_id) values (:id, :title, :author_id, :genre_id)", params);
+        namedJdbc.update("insert into books(title, author_id, genre_id) values (:title, :author_id, :genre_id)", params);
     }
 
     @Override
-    public int updateById(Long id, String newTitle, Author newAuthor, Genre newGenre) {
+    public int update(Book book) {
         Map<String, Object> params = Map.of(
-                ID, id,
-                TITLE, newTitle,
-                AUTHOR_ID, newAuthor.getId(),
-                GENRE_ID, newGenre.getId()
+                ID, book.getId(),
+                TITLE, book.getTitle(),
+                AUTHOR_ID, book.getAuthor().getId(),
+                GENRE_ID, book.getGenre().getId()
         );
 
         return namedJdbc.update(
@@ -66,10 +62,10 @@ public class BookDaoJdbc implements BookDao {
     public Book getById(Long id) {
         return namedJdbc.queryForObject(
                 "select b.*, a.name as author_name, g.name as genre_name " +
-                        "from books b, authors a, genres g " +
-                        "where b.author_id = a.id " +
-                        "and b.genre_id = g.id " +
-                        "and b.id = :id",
+                        "from books b " +
+                        "inner join authors a on b.author_id = a.id " +
+                        "inner join genres g on b.genre_id = g.id " +
+                        "where b.id = :id",
                 Map.of(ID, id),
                 new BookMapper());
     }
@@ -81,11 +77,11 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public List<Book> getAll() {
-        return jdbc.query(
+        return namedJdbc.getJdbcOperations().query(
                 "select b.*, a.name as author_name, g.name as genre_name " +
-                        "from books b, authors a, genres g " +
-                        "where b.author_id = a.id " +
-                        "and b.genre_id = g.id",
+                        "from books b " +
+                        "inner join authors a on b.author_id = a.id " +
+                        "inner join genres g on b.genre_id = g.id",
                 new BookMapper());
     }
 

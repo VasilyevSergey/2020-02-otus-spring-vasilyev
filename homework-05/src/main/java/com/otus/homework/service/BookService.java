@@ -8,7 +8,7 @@ import java.util.List;
 public interface BookService {
     int count();
 
-    void insert(Long id, String title, Long authorId, Long genreId) throws DataLoadingException;
+    void insert(String title, Long authorId, Long genreId) throws DataLoadingException;
 
     Book getById(Long id) throws DataLoadingException;
 

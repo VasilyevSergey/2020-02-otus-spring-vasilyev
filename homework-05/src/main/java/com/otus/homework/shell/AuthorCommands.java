@@ -17,9 +17,9 @@ public class AuthorCommands {
     }
 
     @ShellMethod(value = "insert author", key = {"ia", "insert author"})
-    public String insert(Long id, String name) {
+    public String insert(String name) {
         try {
-            service.insert(id, name);
+            service.insert(name);
             return String.format("Автор '%s' добавлен", name);
         } catch (DataLoadingException e) {
             return e.getMessage();

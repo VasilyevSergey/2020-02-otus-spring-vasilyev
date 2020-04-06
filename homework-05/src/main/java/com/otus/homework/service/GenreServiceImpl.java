@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class GenreServiceImpl implements GenreService {
-    private static final String GENRE_ALREADY_EXIST = "Жанр с id '%d' уже существует";
+    private static final String ERROR_INSERT = "При добавлении жанра '%s' произошла ошибка";
     private static final String GENRE_NOT_FOUND = "Жанр с id '%d' не найден";
     private final GenreDao genreDao;
 
@@ -24,12 +24,12 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public void insert(Long id, String name) throws DataLoadingException {
-        Genre genre = new Genre(id, name);
+    public void insert(String name) throws DataLoadingException {
+        Genre genre = new Genre(null, name);
         try {
             genreDao.insert(genre);
         } catch (DataAccessException e) {
-            throw new DataLoadingException(String.format(GENRE_ALREADY_EXIST, id), e.getCause());
+            throw new DataLoadingException(String.format(ERROR_INSERT, name), e.getCause());
         }
     }
 

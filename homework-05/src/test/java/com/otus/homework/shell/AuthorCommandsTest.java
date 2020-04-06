@@ -22,7 +22,6 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class AuthorCommandsTest {
 
-
     @MockBean
     private AuthorService service;
 
@@ -42,7 +41,7 @@ public class AuthorCommandsTest {
     private static final String COMMAND_INSERT_AUTHOR_SHORT = "ia";
     private static final String PATTERN_SUCCEED_INSERT_AUTHOR = "Автор '%s' добавлен";
 
-    private static final String AUTHOR_EXIST = "Автор с id '%d' уже существует";
+    private static final String ERROR_INSERT = "При добавлении автора '%s' произошла ошибка";
     private static final String AUTHOR_NOT_FOUND = "Автор с id '%d' не найден";
 
     private static final String COMMAND_GET_AUTHOR = "get author";
@@ -74,30 +73,30 @@ public class AuthorCommandsTest {
     @Test
     void shouldInsertAuthor() {
 
-        String result = (String) shell.evaluate(() -> String.format("%s %d %s", COMMAND_INSERT_AUTHOR, EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME));
+        String result = (String) shell.evaluate(() -> String.format("%s %s", COMMAND_INSERT_AUTHOR, EXPECTED_AUTHOR_NAME));
         assertThat(result).isEqualTo(String.format(PATTERN_SUCCEED_INSERT_AUTHOR, EXPECTED_AUTHOR_NAME));
-        verify(service, times(1)).insert(EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME);
+        verify(service, times(1)).insert(EXPECTED_AUTHOR_NAME);
 
-        result = (String) shell.evaluate(() -> String.format("%s %d %s", COMMAND_INSERT_AUTHOR_SHORT, EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME));
+        result = (String) shell.evaluate(() -> String.format("%s %s", COMMAND_INSERT_AUTHOR_SHORT, EXPECTED_AUTHOR_NAME));
         assertThat(result).isEqualTo(String.format(PATTERN_SUCCEED_INSERT_AUTHOR, EXPECTED_AUTHOR_NAME));
-        verify(service, times(2)).insert(EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME);
+        verify(service, times(2)).insert(EXPECTED_AUTHOR_NAME);
     }
 
     @SneakyThrows
-    @DisplayName(" не добавлять автора, если автор уже существует")
+    @DisplayName(" кидать исключение, если не получилось добавить автора")
     @Test
     void shouldNotInsertAuthorIfAuthorAlreadyExist() {
         Throwable throwable = new Exception();
-        doThrow(new DataLoadingException(String.format(AUTHOR_EXIST, EXPECTED_AUTHOR_ID), throwable))
-                .when(service).insert(EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME);
+        doThrow(new DataLoadingException(String.format(ERROR_INSERT, EXPECTED_AUTHOR_NAME), throwable))
+                .when(service).insert(EXPECTED_AUTHOR_NAME);
 
-        String result = (String) shell.evaluate(() -> String.format("%s %d %s", COMMAND_INSERT_AUTHOR, EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME));
-        assertThat(result).isEqualTo(String.format(AUTHOR_EXIST, EXPECTED_AUTHOR_ID));
-        verify(service, times(1)).insert(EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME);
+        String result = (String) shell.evaluate(() -> String.format("%s %s", COMMAND_INSERT_AUTHOR, EXPECTED_AUTHOR_NAME));
+        assertThat(result).isEqualTo(String.format(ERROR_INSERT, EXPECTED_AUTHOR_NAME));
+        verify(service, times(1)).insert(EXPECTED_AUTHOR_NAME);
 
-        result = (String) shell.evaluate(() -> String.format("%s %d %s", COMMAND_INSERT_AUTHOR_SHORT, EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME));
-        assertThat(result).isEqualTo(String.format(AUTHOR_EXIST, EXPECTED_AUTHOR_ID));
-        verify(service, times(2)).insert(EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME);
+        result = (String) shell.evaluate(() -> String.format("%s %s", COMMAND_INSERT_AUTHOR_SHORT, EXPECTED_AUTHOR_NAME));
+        assertThat(result).isEqualTo(String.format(ERROR_INSERT, EXPECTED_AUTHOR_NAME));
+        verify(service, times(2)).insert(EXPECTED_AUTHOR_NAME);
     }
 
     @SneakyThrows

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
-    private static final String BOOK_ALREADY_EXIST = "Книга с id '%d' уже существует";
+    private static final String BOOK_ALREADY_EXIST = "Книга %s уже существует";
     private static final String BOOK_NOT_FOUND = "Книга с id '%d' не найдена";
     private final BookDao bookDao;
     private final AuthorService authorService;
@@ -32,14 +32,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void insert(Long id, String title, Long authorId, Long genreId) throws DataLoadingException {
+    public void insert(String title, Long authorId, Long genreId) throws DataLoadingException {
         Author author = authorService.getById(authorId);
         Genre genre = genreService.getById(genreId);
-        Book book = new Book(id, title, author, genre);
+        Book book = new Book(null, title, author, genre);
         try {
             bookDao.insert(book);
         } catch (DataAccessException e) {
-            throw new DataLoadingException(String.format(BOOK_ALREADY_EXIST, id), e.getCause());
+            throw new DataLoadingException(String.format(BOOK_ALREADY_EXIST, book.toString()), e.getCause());
         }
     }
 
@@ -70,7 +70,9 @@ public class BookServiceImpl implements BookService {
     public void updateById(Long id, String newTitle, Long newAuthorId, Long newGenreId) throws DataLoadingException {
         Author newAuthor = authorService.getById(newAuthorId);
         Genre newGenre = genreService.getById(newGenreId);
-        int numberOfRowsAffected = bookDao.updateById(id, newTitle, newAuthor, newGenre);
+        Book book = new Book(id, newTitle, newAuthor, newGenre);
+
+        int numberOfRowsAffected = bookDao.update(book);
         if (numberOfRowsAffected == 0) {
             throw new DataLoadingException(String.format(BOOK_NOT_FOUND, id), new Exception().getCause());
         }

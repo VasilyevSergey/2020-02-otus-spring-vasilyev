@@ -1,7 +1,6 @@
 package com.otus.homework.dao;
 
 import com.otus.homework.domain.Genre;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
@@ -18,18 +17,15 @@ public class GenreDaoJdbc implements GenreDao {
     private static final String ID = "id";
     private static final String NAME = "name";
 
-    private final JdbcOperations jdbc;
     private final NamedParameterJdbcOperations namedJdbc;
 
-    public GenreDaoJdbc(JdbcOperations jdbc,
-                        NamedParameterJdbcOperations namedJdbc) {
-        this.jdbc = jdbc;
+    public GenreDaoJdbc(NamedParameterJdbcOperations namedJdbc) {
         this.namedJdbc = namedJdbc;
     }
 
     @Override
     public int count() {
-        return jdbc.queryForObject("select count(*) from genres", Integer.class);
+        return namedJdbc.getJdbcOperations().queryForObject("select count(*) from genres", Integer.class);
     }
 
     @Override
@@ -54,7 +50,7 @@ public class GenreDaoJdbc implements GenreDao {
 
     @Override
     public List<Genre> getAll() {
-        return jdbc.query("select * from genres", new GenreMapper());
+        return namedJdbc.getJdbcOperations().query("select * from genres", new GenreMapper());
     }
 
 

@@ -8,7 +8,7 @@ import java.util.List;
 public interface AuthorService {
     int count();
 
-    void insert(Long id, String name) throws DataLoadingException;
+    void insert(String name) throws DataLoadingException;
 
     Author getById(Long id) throws DataLoadingException;
 

@@ -26,23 +26,23 @@ class BookDaoJdbcTest {
 
     private static final Book EXPECTED_FIRST_BOOK = new Book(
             1L,
-            "Руслан и Людмила",
-            new Author(1L, "Пушкин"),
-            new Genre(1L, "Поэма в стихах")
+            "Ruslan and Lyudmila",
+            new Author(1L, "Pushkin"),
+            new Genre(1L, "A poem in verse")
     );
 
     private static final Book EXPECTED_SECOND_BOOK = new Book(
             2L,
-            "Властелин колец",
-            new Author(2L, "Толкиен"),
-            new Genre(2L, "Фэнтези")
+            "Lord of the Rings",
+            new Author(2L, "Tolkien"),
+            new Genre(2L, "Fantasy")
     );
 
     private static final Book EXPECTED_NEW_BOOK = new Book(
             3L,
             "Евгений Онегин",
-            new Author(1L, "Пушкин"),
-            new Genre(1L, "Поэма в стихах")
+            new Author(1L, "Pushkin"),
+            new Genre(1L, "A poem in verse")
     );
 
 

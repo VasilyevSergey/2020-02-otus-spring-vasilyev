@@ -21,9 +21,9 @@ class GenreDaoJdbcTest {
     private static final String INSERTED_GENRE_NAME = "NewGenre";
     private static final long INSERTED_GENRE_ID = 3L;
     private static final long EXPECTED_FIRST_GENRE_ID = 1L;
-    private static final String EXPECTED_FIRST_GENRE_NAME = "Поэма в стихах";
+    private static final String EXPECTED_FIRST_GENRE_NAME = "A poem in verse";
     private static final long EXPECTED_SECOND_GENRE_ID = 2L;
-    private static final String EXPECTED_SECOND_GENRE_NAME = "Фэнтези";
+    private static final String EXPECTED_SECOND_GENRE_NAME = "Fantasy";
 
     @Autowired
     private GenreDaoJdbc dao;

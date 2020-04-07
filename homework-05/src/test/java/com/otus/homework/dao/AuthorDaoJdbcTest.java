@@ -21,13 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class AuthorDaoJdbcTest {
 
     private static final int EXPECTED_AUTHORS_COUNT = 2;
-    private static final String EXPECTED_FIRST_AUTHOR_NAME = "Пушкин";
+    private static final String EXPECTED_FIRST_AUTHOR_NAME = "Pushkin";
     private static final String INSERTED_AUTHOR_NAME = "NewAuthor";
     private static final long INSERTED_AUTHOR_ID = 3L;
     private static final long DELETE_AUTHOR_ID = 2L;
     private static final long EXPECTED_FIRST_AUTHOR_ID = 1L;
     private static final long EXPECTED_SECOND_AUTHOR_ID = 2L;
-    private static final String EXPECTED_SECOND_AUTHOR_NAME = "Толкиен";
+    private static final String EXPECTED_SECOND_AUTHOR_NAME = "Tolkien";
 
     @Autowired
     private AuthorDaoJdbc dao;

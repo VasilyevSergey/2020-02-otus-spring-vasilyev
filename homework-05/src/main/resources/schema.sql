@@ -1,10 +1,9 @@
-drop table if exists authors;
-create table authors(id bigint auto_increment primary key, name varchar(255));
-
-drop table if exists genres;
-create table genres(id bigint auto_increment primary key, name varchar(255));
-
 drop table if exists books;
+drop table if exists authors;
+drop table if exists genres;
+
+create table authors(id bigint auto_increment primary key, name varchar(255));
+create table genres(id bigint auto_increment primary key, name varchar(255));
 create table books(
     id bigint auto_increment primary key,
     title varchar(255),

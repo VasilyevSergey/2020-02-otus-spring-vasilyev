@@ -1,5 +1,6 @@
 package com.otus.homework.shell;
 
+import com.otus.homework.domain.Author;
 import com.otus.homework.exception.DataLoadingException;
 import com.otus.homework.service.AuthorService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,11 @@ public class AuthorCommands {
 
     @ShellMethod(value = "get all authors", key = {"gaa", "get all authors"})
     public String getAll() {
-        return service.getAll().toString();
+        StringBuilder authorList = new StringBuilder("Список авторов:\n");
+        for (Author author : service.getAll()) {
+            authorList.append(String.format("id = %d, имя = %s\n", author.getId(), author.getName()));
+        }
+        return authorList.toString();
     }
 
     @ShellMethod(value = "delete author", key = {"da", "delete author"})

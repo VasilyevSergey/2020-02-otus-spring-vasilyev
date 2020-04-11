@@ -140,13 +140,14 @@ public class AuthorCommandsTest {
     @Test
     void shouldGetAllAuthors() {
         given(service.getAll()).willReturn(Collections.singletonList(EXPECTED_AUTHOR));
+        String expectedAuthorList = String.format("Список авторов:\nid = %d, имя = %s\n", EXPECTED_AUTHOR_ID, EXPECTED_AUTHOR_NAME);
 
         String result = (String) shell.evaluate(() -> COMMAND_GET_ALL_AUTHORS);
-        assertThat(result).isEqualTo(Collections.singletonList(EXPECTED_AUTHOR).toString());
+        assertThat(result).isEqualTo(expectedAuthorList);
         verify(service, times(1)).getAll();
 
         result = (String) shell.evaluate(() -> COMMAND_GET_ALL_AUTHORS_SHORT);
-        assertThat(result).isEqualTo(Collections.singletonList(EXPECTED_AUTHOR).toString());
+        assertThat(result).isEqualTo(expectedAuthorList);
         verify(service, times(2)).getAll();
     }
 

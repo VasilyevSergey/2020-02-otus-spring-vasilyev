@@ -1,5 +1,6 @@
 package com.otus.homework.shell;
 
+import com.otus.homework.domain.Genre;
 import com.otus.homework.exception.DataLoadingException;
 import com.otus.homework.service.GenreService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,11 @@ public class GenreCommands {
 
     @ShellMethod(value = "get all genres", key = {"gag", "get all genres"})
     public String getAll() {
-        return service.getAll().toString();
+
+        StringBuilder genreList = new StringBuilder("Список жанров:\n");
+        for (Genre genre : service.getAll()) {
+            genreList.append(String.format("id = %d, название = %s\n", genre.getId(), genre.getName()));
+        }
+        return genreList.toString();
     }
 }

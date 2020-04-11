@@ -1,5 +1,6 @@
 package com.otus.homework.shell;
 
+import com.otus.homework.domain.Book;
 import com.otus.homework.exception.DataLoadingException;
 import com.otus.homework.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,16 @@ public class BookCommands {
 
     @ShellMethod(value = "get all books", key = {"gab", "get all books"})
     public String getAll() {
-        return service.getAll().toString();
+        StringBuilder bookList = new StringBuilder("Список книг:\n");
+        for (Book book : service.getAll()) {
+            bookList.append(String.format(
+                    "id = %d, название = %s, автор = %s, жанр = %s\n",
+                    book.getId(),
+                    book.getTitle(),
+                    book.getAuthor().getName(),
+                    book.getGenre().getName()));
+        }
+        return bookList.toString();
     }
 
     @ShellMethod(value = "delete book", key = {"db", "delete book"})

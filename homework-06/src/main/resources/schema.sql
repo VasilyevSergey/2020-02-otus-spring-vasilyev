@@ -1,3 +1,4 @@
+drop table if exists comments;
 drop table if exists books;
 drop table if exists authors;
 drop table if exists genres;
@@ -22,4 +23,12 @@ create table books(
     primary key (id),
     unique (title, author_id, genre_id));
 
+create table comments(
+    id bigint auto_increment,
+    comment varchar(255),
+    datetime timestamp with time zone,
+    book_id bigint references books(id) on delete cascade,
+    commentator varchar(255),
+    primary key (id)
+);
 

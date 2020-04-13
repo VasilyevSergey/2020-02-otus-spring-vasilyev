@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("Класс AuthorCommands должен ")
 @SpringBootTest
-public class AuthorCommandsTest {
+class AuthorCommandsTest {
 
     @MockBean
     private AuthorService service;
@@ -129,11 +129,6 @@ public class AuthorCommandsTest {
         result = (String) shell.evaluate(() -> String.format("%s %d", COMMAND_GET_AUTHOR_SHORT, EXPECTED_AUTHOR_ID));
         assertThat(result).isEqualTo(String.format(AUTHOR_NOT_FOUND, EXPECTED_AUTHOR_ID));
         verify(service, times(2)).getById(EXPECTED_AUTHOR_ID);
-    }
-
-    @ShellMethod(value = "get all authors", key = {"gaa", "get all authors"})
-    public String getAll() {
-        return service.getAll().toString();
     }
 
     @DisplayName("получать всех авторов")

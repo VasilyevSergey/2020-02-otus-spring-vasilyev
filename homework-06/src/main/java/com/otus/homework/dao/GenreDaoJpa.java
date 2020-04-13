@@ -24,7 +24,7 @@ public class GenreDaoJpa implements GenreDao {
 
     @Override
     public void insert(Genre genre) {
-        if (genre.getId() <= 0) {
+        if (genre.getId() == null) {
             em.persist(genre);
         } else {
             em.merge(genre);

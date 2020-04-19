@@ -39,8 +39,8 @@ class BookDaoJpaTest {
     );
 
     private static final Book EXPECTED_NEW_BOOK = new Book(
-            3L,
-            "Евгений Онегин",
+            null,
+            "new title",
             new Author(1L, "Pushkin"),
             new Genre(1L, "A poem in verse")
     );

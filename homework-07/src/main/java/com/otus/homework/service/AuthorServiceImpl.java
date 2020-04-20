@@ -1,0 +1,59 @@
+package com.otus.homework.service;
+
+import com.otus.homework.dao.AuthorDao;
+import com.otus.homework.domain.Author;
+import com.otus.homework.exception.DataLoadingException;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class AuthorServiceImpl implements AuthorService {
+    private static final String ERROR_INSERT = "При добавлении автора '%s' произошла ошибка";
+    private static final String AUTHOR_NOT_FOUND = "Автор с id '%d' не найден";
+    private final AuthorDao authorDao;
+
+    public AuthorServiceImpl(AuthorDao authorDao) {
+        this.authorDao = authorDao;
+    }
+
+    @Override
+    public long count() {
+        return authorDao.count();
+    }
+
+    @Override
+    public void insert(String name) throws DataLoadingException {
+        Author author = new Author(name);
+        try {
+            authorDao.save(author);
+        } catch (Exception e) {
+            throw new DataLoadingException(String.format(ERROR_INSERT, name), e.getCause());
+        }
+    }
+
+    @Override
+    public Author getById(Long id) throws DataLoadingException {
+
+        Optional<Author> author = authorDao.findById(id);
+        if (author.isPresent()) {
+            return author.get();
+        } else {
+            throw new DataLoadingException(String.format(AUTHOR_NOT_FOUND, id));
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) throws DataLoadingException {
+        if (!authorDao.existsById(id)) {
+            throw new DataLoadingException(String.format(AUTHOR_NOT_FOUND, id));
+        }
+        authorDao.deleteById(id);
+    }
+
+    @Override
+    public List<Author> getAll() {
+        return authorDao.findAll();
+    }
+}

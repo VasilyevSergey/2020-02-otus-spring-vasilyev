@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNull;
 
 @DisplayName("Dao для работы с комментариями должен ")
 @DataJpaTest
-class CommentDaoTest {
+class CommentRepositoryTest {
     private static final int EXPECTED_COMMENTS_COUNT = 3;
     private static final long EXPECTED_FIRST_COMMENT_ID = 1L;
     private static final long EXPECTED_SECOND_COMMENT_ID = 2L;
@@ -55,7 +55,7 @@ class CommentDaoTest {
     private TestEntityManager em;
 
     @Autowired
-    private CommentDao dao;
+    private CommentRepository dao;
 
     @DisplayName("возвращать ожидаемое количество комментариев")
     @Test
@@ -75,7 +75,6 @@ class CommentDaoTest {
     }
 
     @DisplayName(" добавлять комментарий")
-
     @Test
     void shouldAddComment() {
         dao.save(ADDED_COMMENT);

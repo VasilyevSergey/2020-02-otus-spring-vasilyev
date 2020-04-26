@@ -6,11 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface AuthorDao extends CrudRepository<Author, Long> {
+public interface AuthorRepository extends CrudRepository<Author, Long> {
 
     long count();
-
-    Author save(Author author);
 
     Optional<Author> findById(Long id);
 

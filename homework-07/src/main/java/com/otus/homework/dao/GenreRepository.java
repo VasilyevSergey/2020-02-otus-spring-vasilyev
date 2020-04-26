@@ -6,11 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface GenreDao extends CrudRepository<Genre, Long> {
+public interface GenreRepository extends CrudRepository<Genre, Long> {
 
     long count();
-
-    Genre save(Genre genre);
 
     Optional<Genre> findById(Long id);
 

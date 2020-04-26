@@ -1,6 +1,6 @@
 package com.otus.homework.service;
 
-import com.otus.homework.dao.BookDao;
+import com.otus.homework.dao.BookRepository;
 import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
 import com.otus.homework.domain.Genre;
@@ -14,21 +14,21 @@ import java.util.Optional;
 public class BookServiceImpl implements BookService {
     private static final String BOOK_ALREADY_EXIST = "Книга %s уже существует";
     private static final String BOOK_NOT_FOUND = "Книга с id '%d' не найдена";
-    private final BookDao bookDao;
+    private final BookRepository bookRepository;
     private final AuthorService authorService;
     private final GenreService genreService;
 
-    public BookServiceImpl(BookDao bookDao,
+    public BookServiceImpl(BookRepository bookRepository,
                            AuthorService authorService,
                            GenreService genreService) {
-        this.bookDao = bookDao;
+        this.bookRepository = bookRepository;
         this.authorService = authorService;
         this.genreService = genreService;
     }
 
     @Override
     public long count() {
-        return bookDao.count();
+        return bookRepository.count();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class BookServiceImpl implements BookService {
         Genre genre = genreService.getById(genreId);
         Book book = new Book(title, author, genre);
         try {
-            bookDao.save(book);
+            bookRepository.save(book);
         } catch (Exception e) {
             throw new DataLoadingException(String.format(BOOK_ALREADY_EXIST, book.toString()), e.getCause());
         }
@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getById(Long id) throws DataLoadingException {
-        Optional<Book> book = bookDao.findById(id);
+        Optional<Book> book = bookRepository.findById(id);
         if (book.isPresent()) {
             return book.get();
         } else {
@@ -55,15 +55,15 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteById(Long id) throws DataLoadingException {
-        if (!bookDao.existsById(id)) {
+        if (!bookRepository.existsById(id)) {
             throw new DataLoadingException(String.format(BOOK_NOT_FOUND, id));
         }
-        bookDao.deleteById(id);
+        bookRepository.deleteById(id);
     }
 
     @Override
     public List<Book> getAll() {
-        return bookDao.findAll();
+        return bookRepository.findAll();
     }
 
     @Override
@@ -71,9 +71,9 @@ public class BookServiceImpl implements BookService {
         Author newAuthor = authorService.getById(newAuthorId);
         Genre newGenre = genreService.getById(newGenreId);
         Book book = new Book(id, newTitle, newAuthor, newGenre);
-        if (!bookDao.existsById(id)) {
+        if (!bookRepository.existsById(id)) {
             throw new DataLoadingException(String.format(BOOK_NOT_FOUND, id));
         }
-        bookDao.save(book);
+        bookRepository.save(book);
     }
 }

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull;
 
 @DisplayName("Dao для работы с книгами должен ")
 @DataJpaTest
-class BookDaoTest {
+class BookRepositoryTest {
 
     private static final long EXPECTED_BOOKS_COUNT = 2L;
 
@@ -54,7 +54,7 @@ class BookDaoTest {
     private TestEntityManager em;
 
     @Autowired
-    private BookDao dao;
+    private BookRepository dao;
 
     @DisplayName("возвращать ожидаемое количество авторов")
     @Test

@@ -1,6 +1,6 @@
 package com.otus.homework.service;
 
-import com.otus.homework.dao.CommentDao;
+import com.otus.homework.dao.CommentRepository;
 import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
 import com.otus.homework.domain.Comment;
@@ -57,7 +57,7 @@ class CommentServiceImplTest {
     private BookService bookService;
 
     @MockBean
-    private CommentDao dao;
+    private CommentRepository dao;
 
     @Autowired
     private CommentServiceImpl service;

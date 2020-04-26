@@ -1,6 +1,6 @@
 package com.otus.homework.service;
 
-import com.otus.homework.dao.AuthorDao;
+import com.otus.homework.dao.AuthorRepository;
 import com.otus.homework.domain.Author;
 import com.otus.homework.exception.DataLoadingException;
 import lombok.SneakyThrows;
@@ -33,7 +33,7 @@ class AuthorServiceImplTest {
     private static final long NOT_EXISTING_AUTHOR_ID = 3L;
 
     @MockBean
-    private AuthorDao dao;
+    private AuthorRepository dao;
 
     @Autowired
     private AuthorServiceImpl service;

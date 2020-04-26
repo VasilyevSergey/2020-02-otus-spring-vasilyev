@@ -1,6 +1,6 @@
 package com.otus.homework.service;
 
-import com.otus.homework.dao.CommentDao;
+import com.otus.homework.dao.CommentRepository;
 import com.otus.homework.domain.Comment;
 import com.otus.homework.exception.DataLoadingException;
 import org.springframework.dao.DataAccessException;
@@ -15,18 +15,18 @@ import java.util.Optional;
 public class CommentServiceImpl implements CommentService {
     private static final String ERROR_INSERT = "При добавлении комментария '%s' произошла ошибка";
     private static final String COMMENT_NOT_FOUND = "Комментарий с id '%d' не найден";
-    private final CommentDao commentDao;
+    private final CommentRepository commentRepository;
     private final BookService bookService;
 
-    public CommentServiceImpl(CommentDao commentDao,
+    public CommentServiceImpl(CommentRepository commentRepository,
                               BookService bookService) {
-        this.commentDao = commentDao;
+        this.commentRepository = commentRepository;
         this.bookService = bookService;
     }
 
     @Override
     public long count() {
-        return commentDao.count();
+        return commentRepository.count();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
                 commentator);
 
         try {
-            commentDao.save(comment);
+            commentRepository.save(comment);
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
             throw new DataLoadingException(String.format(ERROR_INSERT, commentText), e.getCause());
@@ -50,23 +50,15 @@ public class CommentServiceImpl implements CommentService {
     public void updateById(Long id, String commentText) throws DataLoadingException {
         Comment comment = getById(id);
         comment.setComment(commentText);
-
-        System.out.println("comment: " + comment.toString());
-        System.out.println("existsById: " + commentDao.existsById(id));
-
-        if (!commentDao.existsById(id)) {
-            System.out.println("!commentDao.existsById(id)");
+        if (!commentRepository.existsById(id)) {
             throw new DataLoadingException(String.format(COMMENT_NOT_FOUND, id));
-        } else {
-            System.out.println("commentDao.existsById(id)");
         }
-
-        commentDao.save(comment);
+        commentRepository.save(comment);
     }
 
     @Override
     public Comment getById(Long id) throws DataLoadingException {
-        Optional<Comment> comment = commentDao.findById(id);
+        Optional<Comment> comment = commentRepository.findById(id);
         if (comment.isPresent()) {
             return comment.get();
         } else {
@@ -76,19 +68,19 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getByBookId(Long id) throws DataLoadingException {
-        return commentDao.findAllByBook(bookService.getById(id));
+        return commentRepository.findAllByBook(bookService.getById(id));
     }
 
     @Override
     public void deleteById(Long id) throws DataLoadingException {
-        if (!commentDao.existsById(id)) {
+        if (!commentRepository.existsById(id)) {
             throw new DataLoadingException(String.format(COMMENT_NOT_FOUND, id));
         }
-        commentDao.deleteById(id);
+        commentRepository.deleteById(id);
     }
 
     @Override
     public List<Comment> getAll() {
-        return commentDao.findAll();
+        return commentRepository.findAll();
     }
 }

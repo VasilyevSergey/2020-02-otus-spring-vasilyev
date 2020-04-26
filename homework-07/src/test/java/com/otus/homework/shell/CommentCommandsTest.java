@@ -159,13 +159,13 @@ class CommentCommandsTest {
         verify(service, times(2)).getById(EXPECTED_COMMENT_ID);
     }
 
-    @DisplayName("получать всех комментарии")
+    @DisplayName("получать все комментарии")
     @Test
     void shouldGetAllComments() {
         given(service.getAll()).willReturn(Collections.singletonList(EXPECTED_COMMENT));
         String expectedCommentList = String.format(
-                "Список комментариев:\nid = %d, комментарий = %s, книга = %s, комментатор = %s, дата = %s\n",
-                EXPECTED_COMMENT_ID, EXPECTED_COMMENT_TEXT, EXPECTED_COMMENT.getBook().getTitle(), TEST_COMMENTATOR, EXPECTED_COMMENT.getDatetime().toString());
+                "Список комментариев:\nid = %d, комментарий = %s, комментатор = %s, дата = %s\n",
+                EXPECTED_COMMENT_ID, EXPECTED_COMMENT_TEXT, TEST_COMMENTATOR, EXPECTED_COMMENT.getDatetime().toString());
 
         String result = (String) shell.evaluate(() -> COMMAND_GET_ALL_COMMENTS);
         assertThat(result).isEqualTo(expectedCommentList);

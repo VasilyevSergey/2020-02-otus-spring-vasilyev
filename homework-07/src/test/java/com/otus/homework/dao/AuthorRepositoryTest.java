@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNull;
 
 @DisplayName("Dao для работы с авторами должен ")
 @DataJpaTest
-class AuthorDaoTest {
+class AuthorRepositoryTest {
 
     private static final long EXPECTED_AUTHORS_COUNT = 2;
     private static final String INSERTED_AUTHOR_NAME = "NewAuthor";
@@ -29,7 +29,7 @@ class AuthorDaoTest {
     private TestEntityManager em;
 
     @Autowired
-    private AuthorDao dao;
+    private AuthorRepository dao;
 
     @DisplayName("возвращать ожидаемое количество авторов")
     @Test

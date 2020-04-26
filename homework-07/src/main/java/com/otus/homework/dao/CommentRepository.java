@@ -9,11 +9,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentDao extends CrudRepository<Comment, Long> {
+public interface CommentRepository extends CrudRepository<Comment, Long> {
 
     long count();
-
-    Comment save(Comment comment);
 
     Optional<Comment> findById(Long id);
 
@@ -27,10 +25,6 @@ public interface CommentDao extends CrudRepository<Comment, Long> {
 
     void deleteById(Long id);
 
-    @Query("select c " +
-            "from Comment c " +
-            "join fetch c.book b " +
-            "join fetch b.author " +
-            "join fetch b.genre")
+    @Query("select c from Comment c ")
     List<Comment> findAll();
 }

@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Dao для работы с жанрами должен ")
 @DataJpaTest
-class GenreDaoTest {
+class GenreRepositoryTest {
 
     private static final int EXPECTED_GENRES_COUNT = 2;
     private static final String INSERTED_GENRE_NAME = "NewGenre";
@@ -27,7 +27,7 @@ class GenreDaoTest {
     private TestEntityManager em;
 
     @Autowired
-    private GenreDao dao;
+    private GenreRepository dao;
 
     @DisplayName("возвращать ожидаемое количество жанров")
     @Test

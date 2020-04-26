@@ -53,10 +53,9 @@ public class CommentCommands {
         StringBuilder commentList = new StringBuilder("Список комментариев:\n");
         for (Comment comment : service.getAll()) {
             commentList.append(String.format(
-                    "id = %d, комментарий = %s, книга = %s, комментатор = %s, дата = %s\n",
+                    "id = %d, комментарий = %s, комментатор = %s, дата = %s\n",
                     comment.getId(),
                     comment.getComment(),
-                    comment.getBook().getTitle(),
                     comment.getCommentator(),
                     comment.getDatetime().toString()));
         }

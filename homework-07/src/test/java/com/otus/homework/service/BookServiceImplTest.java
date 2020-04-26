@@ -1,6 +1,6 @@
 package com.otus.homework.service;
 
-import com.otus.homework.dao.BookDao;
+import com.otus.homework.dao.BookRepository;
 import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
 import com.otus.homework.domain.Genre;
@@ -43,7 +43,7 @@ class BookServiceImplTest {
     private static final Book NEW_BOOK = new Book(null, TEST_BOOK_TITLE, TEST_AUTHOR, TEST_GENRE);
 
     @MockBean
-    private BookDao bookDao;
+    private BookRepository bookRepository;
 
     @MockBean
     private AuthorService authorService;
@@ -57,7 +57,7 @@ class BookServiceImplTest {
     @DisplayName("возвращать ожидаемое количество книг")
     @Test
     void shouldReturnExpectedBookCount() {
-        given(bookDao.count())
+        given(bookRepository.count())
                 .willReturn(EXPECTED_BOOK_COUNT);
         assertThat(bookService.count()).isEqualTo(EXPECTED_BOOK_COUNT);
     }
@@ -67,7 +67,7 @@ class BookServiceImplTest {
     @Test
     void shouldReturnExpectedBookById() {
 
-        given(bookDao.findById(isA(Long.class)))
+        given(bookRepository.findById(isA(Long.class)))
                 .willReturn(Optional.of(TEST_BOOK));
 
         assertThat(bookService.getById(isA(Long.class)))
@@ -77,7 +77,7 @@ class BookServiceImplTest {
     @DisplayName("кидать исключение, если нельзя получить книгу по её id")
     @Test
     void shouldThrowExceptionIfCantGetBookById() {
-        given(bookDao.findById(TEST_BOOK_ID))
+        given(bookRepository.findById(TEST_BOOK_ID))
                 .willReturn(Optional.empty());
 
         Throwable thrown = assertThrows(DataLoadingException.class, () -> {
@@ -97,7 +97,7 @@ class BookServiceImplTest {
                 .willReturn(TEST_GENRE);
 
         bookService.insert(TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);
-        verify(bookDao, times(1)).save(NEW_BOOK);
+        verify(bookRepository, times(1)).save(NEW_BOOK);
     }
 
     @SneakyThrows
@@ -110,7 +110,7 @@ class BookServiceImplTest {
         given(genreService.getById(isA(Long.class)))
                 .willReturn(TEST_GENRE);
 
-        doThrow(RecoverableDataAccessException.class).when(bookDao).save(isA(Book.class));
+        doThrow(RecoverableDataAccessException.class).when(bookRepository).save(isA(Book.class));
 
         Throwable thrown = assertThrows(DataLoadingException.class, () -> {
             bookService.insert(TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);
@@ -122,17 +122,17 @@ class BookServiceImplTest {
     @DisplayName("удалять книгу по id")
     @Test
     void shouldDeleteBookById() {
-        given(bookDao.existsById(isA(Long.class)))
+        given(bookRepository.existsById(isA(Long.class)))
                 .willReturn(true);
 
         bookService.deleteById(isA(Long.class));
-        verify(bookDao, times(1)).deleteById(isA(Long.class));
+        verify(bookRepository, times(1)).deleteById(isA(Long.class));
     }
 
     @DisplayName("кидать исключение, если нельзя удалить книгу")
     @Test
     void shouldThrowExceptionIfCantDeleteBook() {
-        doThrow(RecoverableDataAccessException.class).when(bookDao).deleteById(TEST_BOOK_ID);
+        doThrow(RecoverableDataAccessException.class).when(bookRepository).deleteById(TEST_BOOK_ID);
 
         Throwable thrown = assertThrows(DataLoadingException.class, () -> {
             bookService.deleteById(TEST_BOOK_ID);
@@ -145,7 +145,7 @@ class BookServiceImplTest {
     void shouldGetAllBooks() {
         List<Book> expectedBookList = Collections.singletonList(TEST_BOOK);
 
-        given(bookDao.findAll())
+        given(bookRepository.findAll())
                 .willReturn(expectedBookList);
 
         List<Book> actualBookList = bookService.getAll();
@@ -162,17 +162,17 @@ class BookServiceImplTest {
         given(genreService.getById(isA(Long.class)))
                 .willReturn(TEST_GENRE);
 
-        given(bookDao.existsById(isA(Long.class)))
+        given(bookRepository.existsById(isA(Long.class)))
                 .willReturn(true);
 
         bookService.updateById(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);
-        verify(bookDao, times(1)).save(TEST_BOOK);
+        verify(bookRepository, times(1)).save(TEST_BOOK);
     }
 
     @DisplayName("кидать исключение при обновлении книги, если книга не найдена")
     @Test
     void shouldThrowExceptionWhileUpdateIdIfBookNotFound() {
-        doThrow(RecoverableDataAccessException.class).when(bookDao).save(TEST_BOOK);
+        doThrow(RecoverableDataAccessException.class).when(bookRepository).save(TEST_BOOK);
 
         Throwable thrown = assertThrows(DataLoadingException.class, () -> {
             bookService.updateById(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR_ID, TEST_GENRE_ID);

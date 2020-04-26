@@ -1,6 +1,6 @@
 package com.otus.homework.service;
 
-import com.otus.homework.dao.AuthorDao;
+import com.otus.homework.dao.AuthorRepository;
 import com.otus.homework.domain.Author;
 import com.otus.homework.exception.DataLoadingException;
 import org.springframework.stereotype.Service;
@@ -12,22 +12,22 @@ import java.util.Optional;
 public class AuthorServiceImpl implements AuthorService {
     private static final String ERROR_INSERT = "При добавлении автора '%s' произошла ошибка";
     private static final String AUTHOR_NOT_FOUND = "Автор с id '%d' не найден";
-    private final AuthorDao authorDao;
+    private final AuthorRepository authorRepository;
 
-    public AuthorServiceImpl(AuthorDao authorDao) {
-        this.authorDao = authorDao;
+    public AuthorServiceImpl(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
     @Override
     public long count() {
-        return authorDao.count();
+        return authorRepository.count();
     }
 
     @Override
     public void insert(String name) throws DataLoadingException {
         Author author = new Author(name);
         try {
-            authorDao.save(author);
+            authorRepository.save(author);
         } catch (Exception e) {
             throw new DataLoadingException(String.format(ERROR_INSERT, name), e.getCause());
         }
@@ -36,7 +36,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Author getById(Long id) throws DataLoadingException {
 
-        Optional<Author> author = authorDao.findById(id);
+        Optional<Author> author = authorRepository.findById(id);
         if (author.isPresent()) {
             return author.get();
         } else {
@@ -46,14 +46,14 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void deleteById(Long id) throws DataLoadingException {
-        if (!authorDao.existsById(id)) {
+        if (!authorRepository.existsById(id)) {
             throw new DataLoadingException(String.format(AUTHOR_NOT_FOUND, id));
         }
-        authorDao.deleteById(id);
+        authorRepository.deleteById(id);
     }
 
     @Override
     public List<Author> getAll() {
-        return authorDao.findAll();
+        return authorRepository.findAll();
     }
 }

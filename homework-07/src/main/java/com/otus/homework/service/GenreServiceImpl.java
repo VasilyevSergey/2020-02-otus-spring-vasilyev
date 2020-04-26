@@ -1,6 +1,6 @@
 package com.otus.homework.service;
 
-import com.otus.homework.dao.GenreDao;
+import com.otus.homework.dao.GenreRepository;
 import com.otus.homework.domain.Genre;
 import com.otus.homework.exception.DataLoadingException;
 import org.springframework.stereotype.Service;
@@ -12,22 +12,22 @@ import java.util.Optional;
 public class GenreServiceImpl implements GenreService {
     private static final String ERROR_INSERT = "При добавлении жанра '%s' произошла ошибка";
     private static final String GENRE_NOT_FOUND = "Жанр с id '%d' не найден";
-    private final GenreDao genreDao;
+    private final GenreRepository genreRepository;
 
-    public GenreServiceImpl(GenreDao genreDao) {
-        this.genreDao = genreDao;
+    public GenreServiceImpl(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
     }
 
     @Override
     public long count() {
-        return genreDao.count();
+        return genreRepository.count();
     }
 
     @Override
     public void insert(String name) throws DataLoadingException {
         Genre genre = new Genre(name);
         try {
-            genreDao.save(genre);
+            genreRepository.save(genre);
         } catch (Exception e) {
             throw new DataLoadingException(String.format(ERROR_INSERT, name), e.getCause());
         }
@@ -35,7 +35,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre getById(Long id) throws DataLoadingException {
-        Optional<Genre> genre = genreDao.findById(id);
+        Optional<Genre> genre = genreRepository.findById(id);
         if (genre.isPresent()) {
             return genre.get();
         } else {
@@ -45,14 +45,14 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void deleteById(Long id) throws DataLoadingException {
-        if (!genreDao.existsById(id)) {
+        if (!genreRepository.existsById(id)) {
             throw new DataLoadingException(String.format(GENRE_NOT_FOUND, id));
         }
-        genreDao.deleteById(id);
+        genreRepository.deleteById(id);
     }
 
     @Override
     public List<Genre> getAll() {
-        return genreDao.findAll();
+        return genreRepository.findAll();
     }
 }

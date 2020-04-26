@@ -2,7 +2,6 @@ package com.otus.homework.dao;
 
 import com.otus.homework.domain.Book;
 import com.otus.homework.domain.Comment;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -16,7 +15,7 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
 
     Optional<Comment> findById(Long id);
 
-    @EntityGraph(attributePaths = {"book"})
+    @Query("select c from Comment c where c.book = :book")
     List<Comment> findAllByBook(@Param("book") Book book);
 
     void deleteById(Long id);

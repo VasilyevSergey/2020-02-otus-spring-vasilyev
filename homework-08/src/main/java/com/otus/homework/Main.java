@@ -2,6 +2,8 @@ package com.otus.homework;
 
 import com.otus.homework.dao.AuthorRepository;
 import com.otus.homework.domain.Author;
+import com.otus.homework.exception.DataLoadingException;
+import com.otus.homework.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,8 +20,15 @@ public class Main {
 //    @Autowired
 //    private AuthorRepository repository;
 
-    public static void main(String[] args) throws InterruptedException {
-        SpringApplication.run(Main.class, args);
+    @Autowired
+    private AuthorService authorService;
+
+    public static void main(String[] args) throws InterruptedException, DataLoadingException {
+        ApplicationContext context = SpringApplication.run(Main.class, args);
+
+        AuthorService authorService = context.getBean(AuthorService.class);
+
+        authorService.insert("new author");
 
 //        ApplicationContext context = SpringApplication.run(Main.class);
 //

@@ -1,5 +1,6 @@
 package com.otus.homework.dao;
 
+import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -15,4 +16,6 @@ public interface BookRepository extends MongoRepository<Book, String> {
     void deleteById(String id);
 
     List<Book> findAll();
+
+    List<Book> findAllByAuthor(Author author);
 }

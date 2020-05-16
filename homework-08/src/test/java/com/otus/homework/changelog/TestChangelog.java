@@ -23,12 +23,12 @@ public class TestChangelog {
     private Book ruslanAndLudmila;
     private Book lordOfTheRings;
 
-    @ChangeSet(order = "000", id = "dropDB", author = "vasilyev", runAlways = true)
+    @ChangeSet(order = "000", id = "dropDB", author = "vasilyev")
     public void dropDB(MongoDatabase database) {
         database.drop();
     }
 
-    @ChangeSet(order = "001", id = "addAuthors", author = "vasilyev", runAlways = true)
+    @ChangeSet(order = "001", id = "addAuthors", author = "vasilyev")
     public void addAuthors(MongoTemplate template) {
         pushkin = template.save(new Author("1", "Pushkin"));
         tolkien = template.save(new Author("2", "Tolkien"));

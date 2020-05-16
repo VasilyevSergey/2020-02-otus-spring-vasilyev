@@ -24,8 +24,6 @@ import static org.assertj.core.api.Assertions.fail;
 @ComponentScan({"com.otus.homework.config", "com.otus.homework.events"})
 @DisplayName("Dao для работы с авторами должен ")
 class AuthorRepositoryTest {
-
-    private static final long EXPECTED_AUTHORS_COUNT = 2;
     private static final String EXPECTED_FIRST_AUTHOR_ID = "1";
     private static final Author EXPECTED_AUTHOR = new Author("1", "Pushkin");
     private static final Author FIRST_AUTHOR = new Author("1", "Pushkin");
@@ -39,12 +37,6 @@ class AuthorRepositoryTest {
             EXPECTED_AUTHOR,
             EXPECTED_GENRE);
 
-    private static final Book EXPECTED_FIRST_COMMENT = new Book(
-            "1",
-            "Ruslan and Lyudmila",
-            EXPECTED_AUTHOR,
-            EXPECTED_GENRE);
-
     @Autowired
     private AuthorRepository authorRepository;
 
@@ -53,14 +45,6 @@ class AuthorRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;
-
-    @DisplayName("возвращать ожидаемое количество авторов")
-    @Test
-    void shouldReturnExpectedAuthorCount() {
-        long count = authorRepository.count();
-        assertThat(count).isEqualTo(EXPECTED_AUTHORS_COUNT);
-    }
-
 
     @DisplayName("возвращать заданного автора по его id")
     @Test

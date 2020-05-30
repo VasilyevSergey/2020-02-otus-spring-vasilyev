@@ -39,14 +39,23 @@
     </div>
 
     <div class="row">
-
-        <label for="author">Author:</label>
-        <select th:>
+        <label for="authorId">Author:</label>
+        <select id="authorId" name="authorId">
             <option th:each="author : ${authors}"
-                    th:value="${author}"
-                    th:text="${author.name}">Sergey Esenin</option>
+                    th:value="${author.id}"
+                    th:text="${author.name}"
+                    th:selected="${author.id==book.author.id}">Sergey Esenin</option>
         </select>
+    </div>
 
+    <div class="row">
+        <label for="genreId">Genre:</label>
+        <select id="genreId" name="genreId">
+            <option th:each="genre : ${genres}"
+                    th:value="${genre.id}"
+                    th:text="${genre.name}"
+                    th:selected="${genre.id==book.genre.id}">poem</option>
+        </select>
     </div>
 
     <div class="row">

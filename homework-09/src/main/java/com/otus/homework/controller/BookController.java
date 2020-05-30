@@ -2,9 +2,11 @@ package com.otus.homework.controller;
 
 import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
+import com.otus.homework.domain.Genre;
 import com.otus.homework.exception.DataLoadingException;
 import com.otus.homework.service.AuthorService;
 import com.otus.homework.service.BookService;
+import com.otus.homework.service.GenreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +20,14 @@ public class BookController {
 
     private final AuthorService authorService;
     private final BookService bookService;
+    private final GenreService genreService;
 
     public BookController(AuthorService authorService,
-                          BookService bookService) {
+                          BookService bookService,
+                          GenreService genreService) {
         this.authorService = authorService;
         this.bookService = bookService;
+        this.genreService = genreService;
     }
 
     @GetMapping("/book/list-by-author")
@@ -37,15 +42,29 @@ public class BookController {
     public String editPage(@RequestParam("id") String id, Model model) throws DataLoadingException {
         Book book = bookService.getById(id);
         List<Author> authors = authorService.getAll();
+        List<Genre> genres = genreService.getAll();
         model.addAttribute("book", book)
-                .addAttribute("authors", authors);
+                .addAttribute("authors", authors)
+                .addAttribute("genres", genres);
         return "book/edit";
     }
 
     @PostMapping("/book/edit")
-    public String saveBook(Book book, Model model) throws DataLoadingException {
-        Book saved = bookService.updateById(book);
-        model.addAttribute(saved);
+    public String saveBook(String id,
+                           String title,
+                           String authorId,
+                           String genreId,
+                           Model model) throws DataLoadingException {
+        Book book1 = new Book(id,
+                title,
+                authorService.getById(authorId),
+                genreService.getById(genreId));
+        Book saved = bookService.updateById(book1);
+        List<Author> authors = authorService.getAll();
+        List<Genre> genres = genreService.getAll();
+        model.addAttribute("book", saved)
+                .addAttribute("authors", authors)
+                .addAttribute("genres", genres);
         return "book/edit";
     }
 }

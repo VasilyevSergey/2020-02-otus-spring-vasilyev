@@ -5,6 +5,7 @@ import com.otus.homework.exception.DataLoadingException;
 import com.otus.homework.service.AuthorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,6 +50,14 @@ public class AuthorController {
         List<Author> authors = authorService.getAll();
         model.addAttribute(saved)
                 .addAttribute("authors", authors);
+        return "author/list";
+    }
+
+    @PostMapping("/author/delete")
+    public String deleteAuthor(@RequestParam("id") String id, Model model) throws DataLoadingException {
+        authorService.deleteById(id);
+        List<Author> authors = authorService.getAll();
+        model.addAttribute("authors", authors);
         return "author/list";
     }
 }

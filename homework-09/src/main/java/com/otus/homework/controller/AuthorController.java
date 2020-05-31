@@ -23,7 +23,9 @@ public class AuthorController {
     @GetMapping("/")
     public String listPage(Model model) {
         List<Author> authors = authorService.getAll();
-        model.addAttribute("authors", authors);
+        String newAuthorName = "";
+        model.addAttribute("authors", authors)
+                .addAttribute("newAuthorName", newAuthorName);
         return "author/list";
     }
 
@@ -35,9 +37,18 @@ public class AuthorController {
     }
 
     @PostMapping("/author/edit")
-    public String saveAuthor(Author author, Model model) {
+    public String editAuthor(Author author, Model model) {
         Author saved = authorService.updateById(author);
         model.addAttribute(saved);
         return "author/edit";
+    }
+
+    @PostMapping("/author/add")
+    public String addAuthor(@RequestParam("newAuthorName") String newAuthorName, Model model) throws DataLoadingException {
+        Author saved = authorService.insert(newAuthorName);
+        List<Author> authors = authorService.getAll();
+        model.addAttribute(saved)
+                .addAttribute("authors", authors);
+        return "author/list";
     }
 }

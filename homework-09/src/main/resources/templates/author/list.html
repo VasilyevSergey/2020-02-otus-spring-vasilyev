@@ -39,5 +39,18 @@
     </tr>
     </tbody>
 </table>
+
+<form id="add-author-form" th:action="@{/author/add}" th:method="post" action="/author/add.html">
+    <h1>Add author:</h1>
+    <div class="row">
+        <label for="name-input">Name:</label>
+        <input id="name-input" name="newAuthorName" type="text" th:value="${newAuthorName}" value="John Doe"/>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+
+</form>
 </body>
 </html>

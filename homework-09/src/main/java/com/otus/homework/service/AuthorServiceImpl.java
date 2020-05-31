@@ -24,10 +24,10 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void insert(String name) throws DataLoadingException {
+    public Author insert(String name) throws DataLoadingException {
         Author author = new Author(name);
         try {
-            authorRepository.save(author);
+            return authorRepository.save(author);
         } catch (Exception e) {
             throw new DataLoadingException(String.format(ERROR_INSERT, name), e.getCause());
         }

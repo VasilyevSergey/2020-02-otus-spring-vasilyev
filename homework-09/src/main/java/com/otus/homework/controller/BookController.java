@@ -69,13 +69,13 @@ public class BookController {
         return "book/edit";
     }
 
-    @DeleteMapping("/book/delete")
+    @PostMapping("/book/delete")
     public String deleteBook(@RequestParam String id,
                              Model model) throws DataLoadingException {
         Book bookToDelete = bookService.getById(id);
         Author author = bookToDelete.getAuthor();
-        List<Book> books = bookService.getByAuthorId(author.getId());
         bookService.deleteById(id);
+        List<Book> books = bookService.getByAuthorId(author.getId());
         model.addAttribute("books", books)
                 .addAttribute("author", author);
         return "book/list-by-author";

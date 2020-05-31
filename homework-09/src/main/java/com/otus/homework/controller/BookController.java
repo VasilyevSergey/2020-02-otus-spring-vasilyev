@@ -9,6 +9,7 @@ import com.otus.homework.service.BookService;
 import com.otus.homework.service.GenreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,21 +51,33 @@ public class BookController {
     }
 
     @PostMapping("/book/edit")
-    public String saveBook(String id,
-                           String title,
-                           String authorId,
-                           String genreId,
+    public String saveBook(@RequestParam String id,
+                           @RequestParam String title,
+                           @RequestParam String authorId,
+                           @RequestParam String genreId,
                            Model model) throws DataLoadingException {
-        Book book1 = new Book(id,
+        Book book = new Book(id,
                 title,
                 authorService.getById(authorId),
                 genreService.getById(genreId));
-        Book saved = bookService.updateById(book1);
+        Book saved = bookService.updateById(book);
         List<Author> authors = authorService.getAll();
         List<Genre> genres = genreService.getAll();
         model.addAttribute("book", saved)
                 .addAttribute("authors", authors)
                 .addAttribute("genres", genres);
         return "book/edit";
+    }
+
+    @DeleteMapping("/book/delete")
+    public String deleteBook(@RequestParam String id,
+                             Model model) throws DataLoadingException {
+        Book bookToDelete = bookService.getById(id);
+        Author author = bookToDelete.getAuthor();
+        List<Book> books = bookService.getByAuthorId(author.getId());
+        bookService.deleteById(id);
+        model.addAttribute("books", books)
+                .addAttribute("author", author);
+        return "book/list-by-author";
     }
 }

@@ -26,6 +26,7 @@
         <th>Author</th>
         <th>Genre</th>
         <th>Edit</th>
+<!--        <th>Delete</th>-->
     </tr>
     </thead>
     <tbody>
@@ -37,6 +38,11 @@
         <td>
             <a th:href="@{/book/edit(id=${book.id})}" href="/book/edit.html">Edit</a>
         </td>
+<!--        <td>-->
+<!--            <form id="delete-button" th:action="@{/book/delete(id=${book.id})}" th:method="delete">-->
+<!--                <input type="submit" value="Delete">-->
+<!--            </form>-->
+<!--        </td>-->
     </tr>
     </tbody>
 </table>

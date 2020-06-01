@@ -46,5 +46,30 @@
     </tr>
     </tbody>
 </table>
+
+<form id="add-book-form" th:action="@{/book/add}" th:method="post" action="/book/add.html">
+    <h1>Add book:</h1>
+    <div class="row">
+        <label for="title-input">Title:</label>
+        <input id="title-input" name="title" type="text" th:value="${title}" value="New title"/>
+    </div>
+
+    <div class="row">
+        <label for="genreId">Genre:</label>
+        <select id="genreId" name="genreId">
+            <option th:each="genre : ${genres}"
+                    th:value="${genre.id}"
+                    th:text="${genre.name}">Poem</option>
+        </select>
+    </div>
+
+    <div class="row">
+        <input type="hidden" th:value="${author.id}" name="authorId" />
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+</form>
 </body>
 </html>

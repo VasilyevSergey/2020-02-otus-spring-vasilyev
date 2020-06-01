@@ -32,12 +32,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void insert(String title, String authorId, String genreId) throws DataLoadingException {
+    public Book insert(String title, String authorId, String genreId) throws DataLoadingException {
         Author author = authorService.getById(authorId);
         Genre genre = genreService.getById(genreId);
         Book book = new Book(title, author, genre);
         try {
-            bookRepository.save(book);
+            return bookRepository.save(book);
         } catch (Exception e) {
             throw new DataLoadingException(String.format(BOOK_ALREADY_EXIST, book.toString()), e.getCause());
         }

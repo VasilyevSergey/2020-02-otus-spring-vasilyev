@@ -9,7 +9,6 @@ import com.otus.homework.service.BookService;
 import com.otus.homework.service.GenreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,8 +33,14 @@ public class BookController {
     @GetMapping("/book/list-by-author")
     public String listPage(@RequestParam("id") String id, Model model) throws DataLoadingException {
         List<Book> books = bookService.getByAuthorId(id);
+        String title = "";
+        List<Genre> genres = genreService.getAll();
+        String genreId = "";
         model.addAttribute("books", books)
-                .addAttribute("author", authorService.getById(id));
+                .addAttribute("author", authorService.getById(id))
+                .addAttribute("title", title)
+                .addAttribute("genreId", genreId)
+                .addAttribute("genres", genres);
         return "book/list-by-author";
     }
 
@@ -80,4 +85,20 @@ public class BookController {
                 .addAttribute("author", author);
         return "book/list-by-author";
     }
+
+    @PostMapping("/book/add")
+    public String addBook(@RequestParam("title") String title,
+                          @RequestParam("genreId") String genreId,
+                          @RequestParam("authorId") String authorId,
+                          Model model) throws DataLoadingException {
+        Book saved = bookService.insert(title, authorId, genreId);
+        List<Book> books = bookService.getByAuthorId(authorId);
+        List<Genre> genres = genreService.getAll();
+        model.addAttribute(saved)
+                .addAttribute("books", books)
+                .addAttribute("author", authorService.getById(authorId))
+                .addAttribute("genres", genres);
+        return "book/list-by-author";
+    }
+
 }

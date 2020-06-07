@@ -1,9 +1,12 @@
-package com.otus.homework.repository;
+package com.otus.homework.repositoryTest;
 
 import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
 import com.otus.homework.domain.Comment;
 import com.otus.homework.domain.Genre;
+import com.otus.homework.repository.AuthorRepository;
+import com.otus.homework.repository.BookRepository;
+import com.otus.homework.repository.CommentRepository;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

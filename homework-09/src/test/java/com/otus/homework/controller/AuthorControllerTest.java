@@ -2,43 +2,26 @@ package com.otus.homework.controller;
 
 import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
-import com.otus.homework.domain.Comment;
 import com.otus.homework.domain.Genre;
 import com.otus.homework.repository.AuthorRepository;
 import com.otus.homework.repository.BookRepository;
 import com.otus.homework.repository.CommentRepository;
 import com.otus.homework.repository.GenreRepository;
 import com.otus.homework.service.AuthorService;
-import com.otus.homework.service.BookService;
-import com.otus.homework.service.CommentService;
-import com.otus.homework.service.GenreService;
-import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
-//import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@RunWith(SpringRunner.class)
 @WebMvcTest(AuthorController.class)
 @DisplayName("Controller для работы с авторами должен ")
 class AuthorControllerTest {
@@ -65,6 +48,17 @@ class AuthorControllerTest {
     @MockBean
     private AuthorService authorService;
 
+    @MockBean
+    private AuthorRepository authorRepository;
+
+    @MockBean
+    private CommentRepository commentRepository;
+
+    @MockBean
+    private GenreRepository genreRepository;
+
+    @MockBean
+    private BookRepository bookRepository;
 
     @Test
     void test() throws Exception {

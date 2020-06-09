@@ -10,6 +10,7 @@ import com.otus.homework.service.GenreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,8 +31,8 @@ public class BookController {
         this.genreService = genreService;
     }
 
-    @GetMapping("/book/list-by-author")
-    public String listPage(@RequestParam("id") String id, Model model) throws DataLoadingException {
+    @GetMapping("/book/list-by-author/{id}")
+    public String listPage(@PathVariable String id, Model model) throws DataLoadingException {
         List<Book> books = bookService.getByAuthorId(id);
         String title = "";
         List<Genre> genres = genreService.getAll();
@@ -44,8 +45,8 @@ public class BookController {
         return "book/list-by-author";
     }
 
-    @GetMapping("/book/edit")
-    public String editPage(@RequestParam("id") String id, Model model) throws DataLoadingException {
+    @GetMapping("/book/edit/{id}")
+    public String editPage(@PathVariable String id, Model model) throws DataLoadingException {
         Book book = bookService.getById(id);
         List<Author> authors = authorService.getAll();
         List<Genre> genres = genreService.getAll();
@@ -74,15 +75,17 @@ public class BookController {
         return "book/edit";
     }
 
-    @PostMapping("/book/delete")
-    public String deleteBook(@RequestParam String id,
+    @PostMapping("/book/delete/{id}")
+    public String deleteBook(@PathVariable String id,
                              Model model) throws DataLoadingException {
         Book bookToDelete = bookService.getById(id);
         Author author = bookToDelete.getAuthor();
         bookService.deleteById(id);
         List<Book> books = bookService.getByAuthorId(author.getId());
+        List<Genre> genres = genreService.getAll();
         model.addAttribute("books", books)
-                .addAttribute("author", author);
+                .addAttribute("author", author)
+                .addAttribute("genres", genres);
         return "book/list-by-author";
     }
 

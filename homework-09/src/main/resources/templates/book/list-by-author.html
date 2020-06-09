@@ -36,10 +36,10 @@
         <td th:text="${book.author.name}">John Doe</td>
         <td th:text="${book.genre.name}">Genre</td>
         <td>
-            <a th:href="@{/book/edit(id=${book.id})}" href="/book/edit.html">Edit</a>
+            <a th:href="@{/book/edit/__${book.id}__}" href="/book/edit.html">Edit</a>
         </td>
         <td>
-            <form id="delete-button" th:action="@{/book/delete(id=${book.id})}" th:method="post">
+            <form id="delete-button" th:action="@{/book/delete/__${book.id}__}" th:method="post">
                 <input type="submit" value="Delete">
             </form>
         </td>

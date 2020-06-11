@@ -6,8 +6,6 @@ import com.mongodb.MongoClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@EnableMongoRepositories("com.otus.homework.repository")
-//@EnableConfigurationProperties
 @Configuration
 public class TestConfig {
 

@@ -58,10 +58,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author updateById(Author author) {
-//
-//        if (!authorRepository.existsById(id)) {
-//            throw new DataLoadingException(String.format(AUTHOR_NOT_FOUND, id));
-//        }
         return authorRepository.save(author);
     }
 }

@@ -19,15 +19,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
 @DisplayName("Controller для работы с книгами должен ")
@@ -117,26 +117,17 @@ class BookControllerTest {
         given(genreService.getById(UPDATED_GENRE.getId()))
                 .willReturn(UPDATED_GENRE);
 
-        given(bookService.updateById(UPDATED_BOOK))
-                .willReturn(UPDATED_BOOK);
-
-        List<Author> expectedAuthorList = Collections.singletonList(UPDATED_AUTHOR);
-        given(authorService.getAll())
-                .willReturn(expectedAuthorList);
-
-        List<Genre> expectedGenreList = Collections.singletonList(UPDATED_GENRE);
-        given(genreService.getAll())
-                .willReturn(expectedGenreList);
-
-        MockHttpServletRequestBuilder editAuthor = post("/book/edit")
+        MockHttpServletRequestBuilder editBook = post("/book/edit")
                 .param("id", UPDATED_BOOK.getId())
                 .param("title", UPDATED_BOOK.getTitle())
                 .param("authorId", UPDATED_BOOK.getAuthor().getId())
                 .param("genreId", UPDATED_BOOK.getGenre().getId());
 
-        mvc.perform(editAuthor)
-                .andExpect(status().isOk())
-                .andExpect(content().string(Matchers.containsString(UPDATED_AUTHOR.getName())));
+        mvc.perform(editBook)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/book/list-by-author/" + UPDATED_AUTHOR.getId()));
+
+        verify(bookService, times(1)).updateById(UPDATED_BOOK);
     }
 
     @Test
@@ -144,48 +135,29 @@ class BookControllerTest {
         given(bookService.getById(BOOK_TO_DELETE.getId()))
                 .willReturn(BOOK_TO_DELETE);
 
-        List<Book> expectedBookList = Collections.singletonList(TEST_BOOK);
-        given(bookService.getByAuthorId(TEST_AUTHOR.getId()))
-                .willReturn(expectedBookList);
+        MockHttpServletRequestBuilder deleteBook = post("/book/delete/" + BOOK_TO_DELETE.getId());
 
-        List<Genre> expectedGenreList = Collections.singletonList(TEST_GENRE);
-        given(genreService.getAll())
-                .willReturn(expectedGenreList);
+        mvc.perform(deleteBook)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/book/list-by-author/" + BOOK_TO_DELETE.getAuthor().getId()));
 
-        MockHttpServletRequestBuilder deleteAuthor = post("/book/delete/" + BOOK_TO_DELETE.getId());
-
-        mvc.perform(deleteAuthor)
-                .andExpect(status().isOk())
-                .andExpect(content().string(Matchers.containsString(TEST_AUTHOR.getName())));
+        verify(bookService, times(1)).deleteById(BOOK_TO_DELETE.getId());
     }
 
     @Test
     void addBook() throws Exception {
-        given(bookService.insert(BOOK_TO_ADD.getTitle(),
-                BOOK_TO_ADD.getAuthor().getId(),
-                BOOK_TO_ADD.getGenre().getId()))
-                .willReturn(BOOK_TO_ADD);
-
-        List<Book> expectedBookList = Arrays.asList(TEST_BOOK, BOOK_TO_ADD);
-        given(bookService.getByAuthorId(TEST_AUTHOR.getId()))
-                .willReturn(expectedBookList);
-
-        List<Genre> expectedGenreList = Collections.singletonList(TEST_GENRE);
-        given(genreService.getAll())
-                .willReturn(expectedGenreList);
-
-        given(authorService.getById(TEST_AUTHOR.getId()))
-                .willReturn(TEST_AUTHOR);
-
-
         MockHttpServletRequestBuilder addBook = post("/book/add")
                 .param("title", BOOK_TO_ADD.getTitle())
                 .param("genreId", BOOK_TO_ADD.getGenre().getId())
                 .param("authorId", BOOK_TO_ADD.getAuthor().getId());
 
         mvc.perform(addBook)
-                .andExpect(status().isOk())
-                .andExpect(content().string(Matchers.containsString(TEST_BOOK.getTitle())))
-                .andExpect(content().string(Matchers.containsString(BOOK_TO_ADD.getTitle())));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/book/list-by-author/" + BOOK_TO_ADD.getAuthor().getId()));
+
+        verify(bookService, times(1)).insert(
+                BOOK_TO_ADD.getTitle(),
+                BOOK_TO_ADD.getAuthor().getId(),
+                BOOK_TO_ADD.getGenre().getId());
     }
 }

@@ -66,13 +66,8 @@ public class BookController {
                 title,
                 authorService.getById(authorId),
                 genreService.getById(genreId));
-        Book saved = bookService.updateById(book);
-        List<Author> authors = authorService.getAll();
-        List<Genre> genres = genreService.getAll();
-        model.addAttribute("book", saved)
-                .addAttribute("authors", authors)
-                .addAttribute("genres", genres);
-        return "book/edit";
+        bookService.updateById(book);
+        return "redirect:/book/list-by-author/" + authorId;
     }
 
     @PostMapping("/book/delete/{id}")
@@ -81,12 +76,7 @@ public class BookController {
         Book bookToDelete = bookService.getById(id);
         Author author = bookToDelete.getAuthor();
         bookService.deleteById(id);
-        List<Book> books = bookService.getByAuthorId(author.getId());
-        List<Genre> genres = genreService.getAll();
-        model.addAttribute("books", books)
-                .addAttribute("author", author)
-                .addAttribute("genres", genres);
-        return "book/list-by-author";
+        return "redirect:/book/list-by-author/" + author.getId();
     }
 
     @PostMapping("/book/add")
@@ -94,14 +84,8 @@ public class BookController {
                           @RequestParam("genreId") String genreId,
                           @RequestParam("authorId") String authorId,
                           Model model) throws DataLoadingException {
-        Book saved = bookService.insert(title, authorId, genreId);
-        List<Book> books = bookService.getByAuthorId(authorId);
-        List<Genre> genres = genreService.getAll();
-        model.addAttribute(saved)
-                .addAttribute("books", books)
-                .addAttribute("author", authorService.getById(authorId))
-                .addAttribute("genres", genres);
-        return "book/list-by-author";
+        bookService.insert(title, authorId, genreId);
+        return "redirect:/book/list-by-author/" + authorId;
     }
 
 }

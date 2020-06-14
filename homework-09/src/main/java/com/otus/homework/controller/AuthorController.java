@@ -39,25 +39,19 @@ public class AuthorController {
 
     @PostMapping("/author/edit")
     public String editAuthor(Author author, Model model) {
-        Author saved = authorService.updateById(author);
-        model.addAttribute(saved);
-        return "author/edit";
+        authorService.updateById(author);
+        return "redirect:/";
     }
 
     @PostMapping("/author/add")
     public String addAuthor(@RequestParam("newAuthorName") String newAuthorName, Model model) throws DataLoadingException {
-        Author saved = authorService.insert(newAuthorName);
-        List<Author> authors = authorService.getAll();
-        model.addAttribute(saved)
-                .addAttribute("authors", authors);
-        return "author/list";
+        authorService.insert(newAuthorName);
+        return "redirect:/";
     }
 
     @PostMapping("/author/delete/{id}")
     public String deleteAuthor(@PathVariable String id, Model model) throws DataLoadingException {
         authorService.deleteById(id);
-        List<Author> authors = authorService.getAll();
-        model.addAttribute("authors", authors);
-        return "author/list";
+        return "redirect:/";
     }
 }

@@ -15,15 +15,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthorController.class)
 @DisplayName("Controller для работы с авторами должен ")
@@ -75,46 +75,37 @@ class AuthorControllerTest {
 
     @Test
     void editAuthorPost() throws Exception {
-        given(authorService.updateById(UPDATED_AUTHOR))
-                .willReturn(UPDATED_AUTHOR);
-
         MockHttpServletRequestBuilder editAuthor = post("/author/edit")
                 .param("id", UPDATED_AUTHOR.getId())
                 .param("name", UPDATED_AUTHOR.getName());
 
         mvc.perform(editAuthor)
-                .andExpect(status().isOk())
-                .andExpect(content().string(Matchers.containsString(UPDATED_AUTHOR.getName())));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+
+        verify(authorService, times(1)).updateById(UPDATED_AUTHOR);
     }
 
     @Test
     void addAuthor() throws Exception {
-        given(authorService.insert(NEW_AUTHOR.getName()))
-                .willReturn(NEW_AUTHOR);
-
-        List<Author> expectedAuthorList = Arrays.asList(EXPECTED_AUTHOR, NEW_AUTHOR);
-        given(authorService.getAll())
-                .willReturn(expectedAuthorList);
-
         MockHttpServletRequestBuilder addAuthor = post("/author/add")
                 .param("newAuthorName", NEW_AUTHOR.getName());
 
         mvc.perform(addAuthor)
-                .andExpect(status().isOk())
-                .andExpect(content().string(Matchers.containsString(EXPECTED_AUTHOR.getName())))
-                .andExpect(content().string(Matchers.containsString(NEW_AUTHOR.getName())));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+
+        verify(authorService, times(1)).insert(NEW_AUTHOR.getName());
     }
 
     @Test
     void deleteAuthor() throws Exception {
-        List<Author> expectedAuthorList = Collections.singletonList(EXPECTED_AUTHOR);
-        given(authorService.getAll())
-                .willReturn(expectedAuthorList);
-
-        MockHttpServletRequestBuilder deleteAuthor = post("/author/delete/2");
+        MockHttpServletRequestBuilder deleteAuthor = post("/author/delete/" + EXPECTED_AUTHOR.getId());
 
         mvc.perform(deleteAuthor)
-                .andExpect(status().isOk())
-                .andExpect(content().string(Matchers.containsString(EXPECTED_AUTHOR.getName())));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+
+        verify(authorService, times(1)).deleteById(EXPECTED_AUTHOR.getId());
     }
 }

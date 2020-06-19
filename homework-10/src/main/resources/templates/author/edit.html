@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit author</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<form id="edit-author-form" action="/api/author/edit" method="post">
+</form>
+
+<script>
+    $(function () {
+        let pathname = window.location.pathname;
+         const arrayOfStrings = pathname.split("/");
+         const authorId = arrayOfStrings[arrayOfStrings.length - 1];
+         $.get('/api/author/get/' + authorId).done(function (author) {
+             $('form').append(`
+                        <h1>Author Info:</h1>
+
+                        <div class="row">
+                            <label for="id-input">ID:</label>
+                            <input id="id-input" type="text" name="id" readonly="readonly" value="${author.id}">
+                        </div>
+
+                        <div class="row">
+                            <label for="holder-input">Name:</label>
+                            <input id="holder-input" name="name" type="text" value="${author.name}"/>
+                        </div>
+
+                        <div class="row">
+                            <button type="submit" id="submitButton">Save</button>
+                        </div>
+                `)
+         })
+    });
+</script>
+
+<script>
+    $("#edit-author-form").submit(function(event) {
+        event.preventDefault();
+
+        let $form = $(this),
+            id = $form.find("input[name='id']").val(),
+            name = $form.find("input[name='name']").val(),
+            url = $form.attr("action");
+
+        // Send the data using post
+        let posting = $.post(url, {id, name});
+
+        // go to page with author list
+        posting.done(function() {
+            window.location.assign("/");
+        });
+    });
+</script>
+</body>
+</html>

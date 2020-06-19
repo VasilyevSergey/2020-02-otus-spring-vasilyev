@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all authors</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .authors, .authors td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>Authors:</h1>
+
+<table class="authors">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Get books</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $.get('/api/author/get-all').done(function (authors) {
+            authors.forEach(function (author) {
+                $('tbody').append(`
+                    <tr>
+                        <td>${author.id}</td>
+                        <td>${author.name}</td>
+                        <td><a href="/book/list-by-author/${author.id}">Get books</a></td>
+                        <td><a href="/author/edit/${author.id}">Edit</a></td>
+                        <td>
+                            <form id="delete-author-form-${author.id}" name="delete-author-form" action="/api/author/delete/${author.id}" method="post">
+                                <button type="submit" id="submitButton">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                `);
+            });
+        })
+    });
+</script>
+
+<form id="add-author-form" action="/api/author/add" method="post">
+    <label for="name-input">Name:</label>
+    <input id="name-input" name="newAuthorName" type="text"/>
+    <input type="submit" value="Add">
+</form>
+
+<script>
+    $("#add-author-form").submit(function(event) {
+        event.preventDefault();
+
+        let $form = $(this),
+            newAuthorName = $form.find("input[name='newAuthorName']").val(),
+            url = $form.attr("action");
+
+        // Send the data using post
+        let posting = $.post(url, {newAuthorName});
+
+        // Refresh page
+        posting.done(function() {
+            window.location.assign("/");
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $.get('/api/author/get-all').done(function (authors) {
+            authors.forEach(function (author) {
+                let authorId = author.id;
+                let deleteFormId = "#delete-author-form-" + authorId;
+                $(deleteFormId).submit(function(event) {
+                    event.preventDefault();
+
+                    let $form = $(this),
+                        url = $form.attr("action");
+
+                    // Send the data using post
+                    let posting = $.post(url);
+
+                    // Refresh page
+                    posting.done(function() {
+                        window.location.assign("/");
+                    });
+                });
+            });
+        })
+    });
+</script>
+
+</body>
+</html>

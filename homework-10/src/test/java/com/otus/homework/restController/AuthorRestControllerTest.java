@@ -21,8 +21,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthorRestController.class)
@@ -57,7 +56,7 @@ class AuthorRestControllerTest {
         given(authorService.getAll())
                 .willReturn(expectedAuthorList);
 
-        this.mvc.perform(get("/api/author/get-all"))
+        this.mvc.perform(get("/authors/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(EXPECTED_AUTHOR.getId())))
                 .andExpect(content().string(containsString(EXPECTED_AUTHOR.getName())));
@@ -65,8 +64,7 @@ class AuthorRestControllerTest {
 
     @Test
     void editAuthor() throws Exception {
-        MockHttpServletRequestBuilder editAuthor = post("/api/author/edit")
-                .param("id", UPDATED_AUTHOR.getId())
+        MockHttpServletRequestBuilder editAuthor = put("/authors/" + UPDATED_AUTHOR.getId())
                 .param("name", UPDATED_AUTHOR.getName());
 
         mvc.perform(editAuthor)
@@ -77,7 +75,7 @@ class AuthorRestControllerTest {
 
     @Test
     void addAuthor() throws Exception {
-        MockHttpServletRequestBuilder addAuthor = post("/api/author/add")
+        MockHttpServletRequestBuilder addAuthor = post("/authors/")
                 .param("newAuthorName", NEW_AUTHOR.getName());
 
         mvc.perform(addAuthor)
@@ -88,7 +86,7 @@ class AuthorRestControllerTest {
 
     @Test
     void deleteAuthor() throws Exception {
-        MockHttpServletRequestBuilder deleteAuthor = post("/api/author/delete/" + EXPECTED_AUTHOR.getId());
+        MockHttpServletRequestBuilder deleteAuthor = delete("/authors/" + EXPECTED_AUTHOR.getId());
 
         mvc.perform(deleteAuthor)
                 .andExpect(status().isOk());
@@ -101,7 +99,7 @@ class AuthorRestControllerTest {
         given(authorService.getById(EXPECTED_AUTHOR.getId()))
                 .willReturn(EXPECTED_AUTHOR);
 
-        MockHttpServletRequestBuilder getAuthor = get("/api/author/get/" + EXPECTED_AUTHOR.getId());
+        MockHttpServletRequestBuilder getAuthor = get("/authors/" + EXPECTED_AUTHOR.getId());
         mvc.perform(getAuthor)
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(EXPECTED_AUTHOR.getId())))

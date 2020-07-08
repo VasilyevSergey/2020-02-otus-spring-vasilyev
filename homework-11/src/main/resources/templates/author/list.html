@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all authors</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .authors, .authors td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>Authors:</h1>
+
+<div class="authorList" th:unless="${#lists.isEmpty(authors)}">
+    <table class="authors">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Get books</th>
+            <th>Edit</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="author : ${authors}">
+                <td th:text="${author.id}">1</td>
+                <td th:text="${author.name}">John Doe</td>
+                <td>
+                    <a th:href="@{/book/list-by-author/__${author.id}__}" href="/templates/book/list-by-author.html">Get books</a>
+                </td>
+                <td>
+                    <a th:href="@{/author/edit/__${author.id}__}" href="author/edit.html">Edit</a>
+                </td>
+                <td>
+                    <form action="#" th:action="@{/}" th:object="${author}" method="post">
+                        <label for="id"></label>
+                        <input id="id" name="id" type="hidden" th:value="${author.id}"/>
+                        <button type="submit" name="delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<form id="add-author-form" action="/author/add.html" th:action="@{/}" th:object="${author}" method="post">
+    <h1>Add author:</h1>
+    <div class="row">
+        <label for="name-input">Name:</label>
+        <input id="name-input" type="text" th:field="*{name}" value="John Doe"/>
+    </div>
+
+    <div class="row">
+        <button type="submit" name="save">Save</button>
+    </div>
+</form>
+
+</body>
+</html>

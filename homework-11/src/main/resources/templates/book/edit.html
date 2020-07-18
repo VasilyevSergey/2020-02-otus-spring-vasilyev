@@ -24,7 +24,7 @@
 </head>
 <body>
 
-<form id="edit-book-form" th:object="${book}" method="post">
+<form id="edit-book-form" th:object="${book}" th:action="@{/book/save}" method="post">
     <h1>Author Info:</h1>
 
     <div class="row">

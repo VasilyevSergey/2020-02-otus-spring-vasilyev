@@ -9,13 +9,5 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface BookReactiveRepository extends ReactiveMongoRepository<Book, String> {
 
-    Mono<Long> count();
-
-    Mono<Book> findById(String id);
-
-    Mono<Void> deleteById(String id);
-
-    Flux<Book> findAll();
-
     Flux<Book> findAllByAuthorId(String authorId);
 }

@@ -10,15 +10,7 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface CommentReactiveRepository extends ReactiveMongoRepository<Comment, String> {
 
-    Mono<Long> count();
-
-    Mono<Comment> findById(String id);
-
     Flux<Comment> findAllByBookId(@Param("templates/book") String bookId);
-
-    Mono<Void> deleteById(String id);
-
-    Flux<Comment> findAll();
 
     Mono<Void> deleteAllByBookId(String bookId);
 }

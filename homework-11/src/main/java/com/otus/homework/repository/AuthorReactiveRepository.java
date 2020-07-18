@@ -9,13 +9,5 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface AuthorReactiveRepository extends ReactiveMongoRepository<Author, String> {
 
-    Mono<Long> count();
-
-    Mono<Author> findById(String id);
-
-    Mono<Void> deleteById(String id);
-
-    Flux<Author> findAll();
-
     Mono<Author> save(Mono<Author> person);
 }

@@ -40,7 +40,7 @@
             <a th:href="@{/book/edit/__${book.id}__}" href="/book/edit.html">Edit</a>
         </td>
         <td>
-            <form id="delete-book-form" th:object="${book}" method="post">
+            <form id="delete-book-form" th:action="@{/book/delete}" th:object="${book}" method="post">
                 <label for="id"></label>
                 <input id="id" name="id" type="hidden" th:value="${book.id}"/>
                 <input id="authorId" name="authorId" type="hidden" th:value="${author.id}"/>
@@ -51,7 +51,7 @@
     </tbody>
 </table>
 
-<form id="add-book-form" th:object="${book}" method="post">
+<form id="add-book-form" th:object="${book}" th:action="@{/book/save}" method="post">
     <h1>Add book:</h1>
     <div class="row">
         <label for="title-input">Title:</label>

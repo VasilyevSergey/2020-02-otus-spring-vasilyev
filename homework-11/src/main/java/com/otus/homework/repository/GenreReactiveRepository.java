@@ -8,12 +8,4 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface GenreReactiveRepository extends ReactiveMongoRepository<Genre, String> {
-
-    Mono<Long> count();
-
-    Mono<Genre> findById(String id);
-
-    Mono<Void> deleteById(String id);
-
-    Flux<Genre> findAll();
 }

@@ -32,33 +32,32 @@ public class AuthorController {
         return authorReactiveRepository.findAll();
     }
 
-    @RequestMapping("/")
-    public Mono<String> listPage(@ModelAttribute Author author, final BindingResult bindingResult, final ServerWebExchange exchange) {
+    @GetMapping("/")
+    public Mono<String> listPage(@ModelAttribute Author author, final ServerWebExchange exchange) {
         return exchange.getFormData().flatMap(
-                formData -> {
-                    if (formData.containsKey("save")) {
-                        return saveAuthor(author, bindingResult);
-                    }
-                    if (formData.containsKey("delete")) {
-                        return deleteAuthor(author, bindingResult);
-                    }
-                    return showAuthors();
-                });
+                formData -> showAuthors());
     }
 
-    @RequestMapping("author/edit/{id}")
+    @PostMapping("/author/save")
+    public Mono<String> saveAuthor(@ModelAttribute Author author, final BindingResult bindingResult, final ServerWebExchange exchange) {
+        return exchange.getFormData().flatMap(
+                formData -> saveAuthor(author, bindingResult));
+    }
+
+    @PostMapping("/author/delete")
+    public Mono<String> deleteAuthor(@ModelAttribute Author author, final BindingResult bindingResult, final ServerWebExchange exchange) {
+        return exchange.getFormData().flatMap(
+                formData -> deleteAuthor(author, bindingResult));
+    }
+
+    @GetMapping("author/edit/{id}")
     public Mono<String> editPage(@PathVariable String id,
                                  @ModelAttribute Author editedAuthor,
                                  final BindingResult bindingResult,
                                  final ServerWebExchange exchange,
                                  Model model) {
         return exchange.getFormData().flatMap(
-                formData -> {
-                    if (formData.containsKey("save")) {
-                        return saveAuthor(editedAuthor, bindingResult);
-                    }
-                    return editAuthor(id, bindingResult, model);
-                });
+                formData -> editAuthor(id, bindingResult, model));
     }
 
     private Mono<String> showAuthors() {

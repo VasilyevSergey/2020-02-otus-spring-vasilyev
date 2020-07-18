@@ -38,7 +38,7 @@
                     <a th:href="@{/author/edit/__${author.id}__}" href="author/edit.html">Edit</a>
                 </td>
                 <td>
-                    <form action="#" th:action="@{/}" th:object="${author}" method="post">
+                    <form action="/author/delete.html" th:action="@{/author/delete}" th:object="${author}" method="post">
                         <label for="id"></label>
                         <input id="id" name="id" type="hidden" th:value="${author.id}"/>
                         <button type="submit" name="delete">Delete</button>
@@ -49,7 +49,7 @@
     </table>
 </div>
 
-<form id="add-author-form" action="/author/add.html" th:action="@{/}" th:object="${author}" method="post">
+<form id="add-author-form" action="/author/save.html" th:action="@{/author/save}" th:object="${author}" method="post">
     <h1>Add author:</h1>
     <div class="row">
         <label for="name-input">Name:</label>

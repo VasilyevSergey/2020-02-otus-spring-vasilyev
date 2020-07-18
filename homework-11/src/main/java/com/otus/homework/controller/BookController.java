@@ -44,7 +44,7 @@ public class BookController {
         return authorReactiveRepository.findAll();
     }
 
-    @RequestMapping("/book/list-by-author/{id}")
+    @GetMapping("/book/list-by-author/{id}")
     public Mono<String> listByAuthorPage(@PathVariable String id,
                                          @ModelAttribute Author author,
                                          @ModelAttribute Book book,
@@ -52,30 +52,35 @@ public class BookController {
                                          final ServerWebExchange exchange,
                                          Model model) {
         return exchange.getFormData().flatMap(
-                formData -> {
-                    if (formData.containsKey("save")) {
-                        return saveBook(book, bindingResult, model);
-                    }
-                    if (formData.containsKey("delete")) {
-                        return deleteBook(book, bindingResult, model);
-                    }
-                    return showBooks(id, bindingResult, model);
-                });
+                formData -> showBooks(id, bindingResult, model));
     }
 
-    @RequestMapping("book/edit/{id}")
+    @PostMapping("/book/save")
+    public Mono<String> saveBook(@ModelAttribute Book book,
+                                 final BindingResult bindingResult,
+                                 final ServerWebExchange exchange,
+                                 Model model) {
+        return exchange.getFormData().flatMap(
+                formData -> saveBook(book, bindingResult, model));
+    }
+
+    @PostMapping("/book/delete")
+    public Mono<String> deleteBook(@ModelAttribute Book book,
+                                 final BindingResult bindingResult,
+                                 final ServerWebExchange exchange,
+                                 Model model) {
+        return exchange.getFormData().flatMap(
+                formData -> deleteBook(book, bindingResult, model));
+    }
+
+    @GetMapping("book/edit/{id}")
     public Mono<String> editPage(@PathVariable String id,
                                  @ModelAttribute Book editedBook,
                                  final BindingResult bindingResult,
                                  final ServerWebExchange exchange,
                                  Model model) {
         return exchange.getFormData().flatMap(
-                formData -> {
-                    if (formData.containsKey("save")) {
-                        return saveBook(editedBook, bindingResult, model);
-                    }
-                    return editBook(id, bindingResult, model);
-                });
+                formData -> editBook(id, bindingResult, model));
     }
 
     private Mono<String> showBooks(final String authorId, final BindingResult bindingResult, Model model) {
@@ -115,7 +120,7 @@ public class BookController {
 
         return commentReactiveRepository.deleteAllByBookId(book.getId())
                 .then(bookReactiveRepository.deleteById(book.getId()))
-                .then(showBooks(book.getAuthorId(), bindingResult, model));
+                .then(Mono.just("redirect:/book/list-by-author/" + book.getAuthorId()));
     }
 
     private Mono<String> editBook(final String bookId, final BindingResult bindingResult, Model model) {

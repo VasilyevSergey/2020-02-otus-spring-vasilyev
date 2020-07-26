@@ -3,12 +3,10 @@ package com.otus.homework.changelog;
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
-import com.otus.homework.domain.Author;
-import com.otus.homework.domain.Book;
-import com.otus.homework.domain.Comment;
-import com.otus.homework.domain.Genre;
+import com.otus.homework.domain.*;
 import lombok.val;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -70,5 +68,11 @@ public class DatabaseChangelog {
         template.save(firstComment);
         template.save(secondComment);
         template.save(thirdComment);
+    }
+
+    @ChangeSet(order = "005", id = "addUsers", author = "vasilyev", runAlways = true)
+    public void addUsers(MongoTemplate template) {
+        template.save(new UserDB("1", "user", new BCryptPasswordEncoder().encode("user")));
+        template.save(new UserDB("2", "admin", new BCryptPasswordEncoder().encode("admin")));
     }
 }

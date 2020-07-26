@@ -1,17 +1,16 @@
 package com.otus.homework.controller;
 
 import com.otus.homework.domain.Author;
-import com.otus.homework.repository.AuthorRepository;
-import com.otus.homework.repository.BookRepository;
-import com.otus.homework.repository.CommentRepository;
-import com.otus.homework.repository.GenreRepository;
+import com.otus.homework.repository.*;
 import com.otus.homework.service.AuthorService;
+import com.otus.homework.service.MongoUserDetailsServiceImpl;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -50,6 +49,20 @@ class AuthorControllerTest {
     @MockBean
     private BookRepository bookRepository;
 
+    @MockBean
+    private UserRepository userRepository;
+
+    @MockBean
+    private MongoUserDetailsServiceImpl userDetailsService;
+
+    @Test
+    void givenUnauthenticatedAuthorList() throws Exception {
+        this.mvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+    @WithMockUser(username = "user", authorities = {"user"})
     @Test
     void authorList() throws Exception {
         List<Author> expectedAuthorList = Collections.singletonList(EXPECTED_AUTHOR);
@@ -62,6 +75,7 @@ class AuthorControllerTest {
                 .andExpect(content().string(Matchers.containsString(EXPECTED_AUTHOR.getName())));
     }
 
+    @WithMockUser(username = "user", authorities = {"user"})
     @Test
     void editAuthor() throws Exception {
         given(authorService.getById(EXPECTED_AUTHOR.getId()))
@@ -73,6 +87,7 @@ class AuthorControllerTest {
 
     }
 
+    @WithMockUser(username = "user", authorities = {"user"})
     @Test
     void editAuthorPost() throws Exception {
         MockHttpServletRequestBuilder editAuthor = post("/author/edit")
@@ -86,6 +101,7 @@ class AuthorControllerTest {
         verify(authorService, times(1)).updateById(UPDATED_AUTHOR);
     }
 
+    @WithMockUser(username = "user", authorities = {"user"})
     @Test
     void addAuthor() throws Exception {
         MockHttpServletRequestBuilder addAuthor = post("/author/add")
@@ -98,6 +114,7 @@ class AuthorControllerTest {
         verify(authorService, times(1)).insert(NEW_AUTHOR.getName());
     }
 
+    @WithMockUser(username = "user", authorities = {"user"})
     @Test
     void deleteAuthor() throws Exception {
         MockHttpServletRequestBuilder deleteAuthor = post("/author/delete/" + EXPECTED_AUTHOR.getId());

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all authors</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .authors, .authors td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>Authors:</h1>
+
+<table class="authors">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Get books</th>
+        <th>Edit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="author : ${authors}">
+        <td th:text="${author.id}">1</td>
+        <td th:text="${author.name}">John Doe</td>
+        <td>
+            <a th:href="@{/book/list-by-author/__${author.id}__}" href="/book/list-by-author.html">Get books</a>
+        </td>
+        <td>
+            <a th:href="@{/author/edit/__${author.id}__}" href="author/edit.html">Edit</a>
+        </td>
+        <td>
+            <form action="#" th:action="@{/author/delete/__${author.id}__}" th:method="post">
+                <button type="submit" id="submitButton">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<form id="add-author-form" th:action="@{/author/add}" th:method="post" action="/author/add.html">
+    <h1>Add author:</h1>
+    <div class="row">
+        <label for="name-input">Name:</label>
+        <input id="name-input" name="newAuthorName" type="text" th:value="${newAuthorName}" value="John Doe"/>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+</form>
+</body>
+</html>

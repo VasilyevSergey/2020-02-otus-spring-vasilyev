@@ -11,10 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MongoUserDetailsServiceImpl userDetailsService;
 
-    public SecurityConfiguration(MongoUserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(MongoUserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 

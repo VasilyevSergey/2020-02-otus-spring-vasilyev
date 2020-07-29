@@ -1,0 +1,27 @@
+package com.otus.homework.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(collection = "users")
+public class UserDB {
+
+    @Id
+    private String id;
+
+    private String username;
+
+    private String password;
+
+    private Collection<String> roles;
+}

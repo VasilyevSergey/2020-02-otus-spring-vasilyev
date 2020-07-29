@@ -3,13 +3,14 @@ package com.otus.homework.controller;
 import com.otus.homework.domain.Author;
 import com.otus.homework.repository.*;
 import com.otus.homework.service.AuthorService;
-import com.otus.homework.service.MongoUserDetailsServiceImpl;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -29,12 +30,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthorControllerTest {
     private static final Author EXPECTED_AUTHOR = new Author("1", "Pushkin");
     private static final Author UPDATED_AUTHOR = new Author("1", "Updated author name");
-    private static final Author NEW_AUTHOR = new Author( "3", "New author name");
+    private static final Author NEW_AUTHOR = new Author("3", "New author name");
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String ROLE_USER = "ROLE_USER";
     private static final String USERNAME = "username";
-
 
     @Autowired
     private MockMvc mvc;
@@ -58,7 +58,8 @@ class AuthorControllerTest {
     private UserRepository userRepository;
 
     @MockBean
-    private MongoUserDetailsServiceImpl userDetailsService;
+    @Qualifier("mongoUserDetailsServiceImpl")
+    private UserDetailsService userDetailsService;
 
     @Test
     void givenUnauthenticatedAuthorList() throws Exception {

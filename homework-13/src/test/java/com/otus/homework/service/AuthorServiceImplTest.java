@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.RecoverableDataAccessException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,11 +34,15 @@ class AuthorServiceImplTest {
     private static final Author TEST_AUTHOR = new Author(TEST_AUTHOR_NAME);
     private static final String NOT_EXISTING_AUTHOR_ID = "3";
 
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String USERNAME = "username";
+    private static final String ACCESS_DENIED = "Доступ запрещен";
+
     @MockBean
     private AuthorRepository dao;
 
     @Autowired
-    private AuthorServiceImpl service;
+    private AuthorService service;
 
     @DisplayName("возвращать ожидаемое количество авторов")
     @Test
@@ -91,6 +97,7 @@ class AuthorServiceImplTest {
     @SneakyThrows
     @DisplayName("удалять автора по id")
     @Test
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     void shouldDeleteAuthorById() {
         given(dao.existsById(TEST_AUTHOR_ID))
                 .willReturn(true);
@@ -102,6 +109,7 @@ class AuthorServiceImplTest {
     @SneakyThrows
     @DisplayName("кидать исключение при удалении автора, если автора не существует")
     @Test
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     void shouldThrowExceptionIfCantDeleteAuthor() {
         given(dao.findById(NOT_EXISTING_AUTHOR_ID))
                 .willReturn(Optional.empty());
@@ -110,6 +118,16 @@ class AuthorServiceImplTest {
             service.deleteById(NOT_EXISTING_AUTHOR_ID);
         });
         assertThat(thrown.getMessage()).isEqualTo(String.format(AUTHOR_NOT_FOUND, NOT_EXISTING_AUTHOR_ID));
+    }
+
+    @DisplayName("кидать исключение, если у пользователя, удаляющего автора, нет роли ADMIN")
+    @Test
+    @WithMockUser(username = USERNAME)
+    void shouldThrowAccessDeniedException() {
+        Throwable thrown = assertThrows(AccessDeniedException.class, () -> {
+            service.deleteById(TEST_AUTHOR_ID);
+        });
+        assertThat(thrown.getMessage()).isEqualTo(ACCESS_DENIED);
     }
 
     @DisplayName(" возвращать всех авторов")

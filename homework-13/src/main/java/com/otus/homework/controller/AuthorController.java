@@ -51,14 +51,4 @@ public class AuthorController {
         authorService.deleteById(id);
         return "redirect:/";
     }
-
-    @GetMapping("/403")
-    public String accessDenied() {
-        return "errors/403";
-    }
-
-    @RequestMapping("/405")
-    public String methodNotAllowed() {
-        return "errors/405";
-    }
 }

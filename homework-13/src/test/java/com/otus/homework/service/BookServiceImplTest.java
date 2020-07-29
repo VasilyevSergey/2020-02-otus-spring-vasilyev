@@ -1,10 +1,10 @@
 package com.otus.homework.service;
 
-import com.otus.homework.repository.BookRepository;
 import com.otus.homework.domain.Author;
 import com.otus.homework.domain.Book;
 import com.otus.homework.domain.Genre;
 import com.otus.homework.exception.DataLoadingException;
+import com.otus.homework.repository.BookRepository;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.RecoverableDataAccessException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +44,10 @@ class BookServiceImplTest {
     private static final Book TEST_BOOK = new Book(TEST_BOOK_ID, TEST_BOOK_TITLE, TEST_AUTHOR, TEST_GENRE);
     private static final Book NEW_BOOK = new Book(null, TEST_BOOK_TITLE, TEST_AUTHOR, TEST_GENRE);
 
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String USERNAME = "username";
+    private static final String ACCESS_DENIED = "Доступ запрещен";
+
     @MockBean
     private BookRepository bookRepository;
 
@@ -52,10 +58,21 @@ class BookServiceImplTest {
     private GenreService genreService;
 
     @Autowired
-    private BookServiceImpl bookService;
+    private BookService bookService;
+
+    @DisplayName("кидать исключение, если у пользователя нет роли ADMIN")
+    @Test
+    @WithMockUser(username = USERNAME)
+    void shouldThrowAccessDeniedException() {
+        Throwable thrown = assertThrows(AccessDeniedException.class, () -> {
+            bookService.count();
+        });
+        assertThat(thrown.getMessage()).isEqualTo(ACCESS_DENIED);
+    }
 
     @DisplayName("возвращать ожидаемое количество книг")
     @Test
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     void shouldReturnExpectedBookCount() {
         given(bookRepository.count())
                 .willReturn(EXPECTED_BOOK_COUNT);
@@ -64,6 +81,7 @@ class BookServiceImplTest {
 
     @SneakyThrows
     @DisplayName("возвращать заданную книгу по его id")
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     @Test
     void shouldReturnExpectedBookById() {
 
@@ -75,6 +93,7 @@ class BookServiceImplTest {
     }
 
     @DisplayName("кидать исключение, если нельзя получить книгу по её id")
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     @Test
     void shouldThrowExceptionIfCantGetBookById() {
         given(bookRepository.findById(TEST_BOOK_ID))
@@ -88,6 +107,7 @@ class BookServiceImplTest {
 
     @SneakyThrows
     @DisplayName("добавлять книгу")
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     @Test
     void shouldInsertBook() {
         given(authorService.getById(isA(String.class)))
@@ -102,6 +122,7 @@ class BookServiceImplTest {
 
     @SneakyThrows
     @DisplayName("кидать исключение при добавлении книги, если книга уже существует")
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     @Test
     void shouldThrowExceptionWhileInsertIfBookAlreadyExist() {
         given(authorService.getById(isA(String.class)))
@@ -120,6 +141,7 @@ class BookServiceImplTest {
 
     @SneakyThrows
     @DisplayName("удалять книгу по id")
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     @Test
     void shouldDeleteBookById() {
         given(bookRepository.existsById(TEST_BOOK_ID))
@@ -130,6 +152,7 @@ class BookServiceImplTest {
     }
 
     @DisplayName("кидать исключение, если нельзя удалить книгу")
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     @Test
     void shouldThrowExceptionIfCantDeleteBook() {
         doThrow(RecoverableDataAccessException.class).when(bookRepository).deleteById(TEST_BOOK_ID);
@@ -141,6 +164,7 @@ class BookServiceImplTest {
     }
 
     @DisplayName(" возвращать все книги")
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     @Test
     void shouldGetAllBooks() {
         List<Book> expectedBookList = Collections.singletonList(TEST_BOOK);
@@ -154,6 +178,7 @@ class BookServiceImplTest {
 
     @SneakyThrows
     @DisplayName(" обновляеть книгу")
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     @Test
     void shouldUpdateBook() {
         given(authorService.getById(isA(String.class)))
@@ -170,6 +195,7 @@ class BookServiceImplTest {
     }
 
     @DisplayName("кидать исключение при обновлении книги, если книга не найдена")
+    @WithMockUser(username = USERNAME, roles  = {ROLE_ADMIN})
     @Test
     void shouldThrowExceptionWhileUpdateIdIfBookNotFound() {
         doThrow(RecoverableDataAccessException.class).when(bookRepository).save(TEST_BOOK);

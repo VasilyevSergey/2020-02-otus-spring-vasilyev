@@ -7,13 +7,14 @@ import com.otus.homework.repository.*;
 import com.otus.homework.service.AuthorService;
 import com.otus.homework.service.BookService;
 import com.otus.homework.service.GenreService;
-import com.otus.homework.service.MongoUserDetailsServiceImpl;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -43,7 +44,6 @@ class BookControllerTest {
     private static final Book BOOK_TO_ADD = new Book("2", "book to add title", TEST_AUTHOR, TEST_GENRE);
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
-    private static final String ROLE_USER = "ROLE_USER";
     private static final String USERNAME = "username";
 
     @Autowired
@@ -74,20 +74,14 @@ class BookControllerTest {
     private UserRepository userRepository;
 
     @MockBean
-    private MongoUserDetailsServiceImpl userDetailsService;
+    @Qualifier("mongoUserDetailsServiceImpl")
+    private UserDetailsService userDetailsService;
 
     @Test
     void givenUnauthenticatedBookList() throws Exception {
         this.mvc.perform(get("/book/list-by-author/" + TEST_AUTHOR.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("http://localhost/login"));
-    }
-
-    @WithMockUser(username = USERNAME, authorities = {ROLE_USER})
-    @Test
-    void authorListWithUserReturn403() throws Exception {
-        this.mvc.perform(get("/book/list-by-author/" + TEST_AUTHOR.getId()))
-                .andExpect(status().is(403));
     }
 
     @WithMockUser(username = USERNAME, authorities = {ROLE_ADMIN})

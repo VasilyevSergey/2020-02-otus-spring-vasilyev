@@ -12,15 +12,7 @@ import java.util.Optional;
 @Transactional
 public interface CommentRepository extends MongoRepository<Comment, String> {
 
-    long count();
-
-    Optional<Comment> findById(String id);
-
     List<Comment> findAllByBook(@Param("templates/book") Book book);
-
-    void deleteById(String id);
-
-    List<Comment> findAll();
 
     void deleteAllByBook(String bookId);
 }

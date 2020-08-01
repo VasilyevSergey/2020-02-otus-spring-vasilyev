@@ -4,15 +4,14 @@ import com.otus.homework.domain.Book;
 import com.otus.homework.domain.Comment;
 import com.otus.homework.repository.BookRepository;
 import com.otus.homework.repository.CommentRepository;
+import com.otus.homework.service.MongoUserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +36,7 @@ class BookRepositoryTest {
     private CommentRepository commentRepository;
 
     @MockBean
-    @Qualifier("mongoUserDetailsServiceImpl")
-    private UserDetailsService userDetailsService;
+    private MongoUserDetailsServiceImpl userDetailsService;
 
     @DisplayName(" удалять книгу и комментарии к книге")
     @Test

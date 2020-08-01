@@ -1,5 +1,6 @@
 package com.otus.homework.config;
 
+import com.otus.homework.service.MongoUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(@Qualifier("mongoUserDetailsServiceImpl") UserDetailsService userDetailsService) {
+    public SecurityConfig(MongoUserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 

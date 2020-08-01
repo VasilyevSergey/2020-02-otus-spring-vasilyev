@@ -7,14 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
 public interface GenreRepository extends MongoRepository<Genre, String> {
-
-    long count();
-
-    Optional<Genre> findById(String id);
-
-    void deleteById(String id);
-
-    List<Genre> findAll();
 }

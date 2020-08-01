@@ -7,16 +7,15 @@ import com.otus.homework.domain.Genre;
 import com.otus.homework.repository.AuthorRepository;
 import com.otus.homework.repository.BookRepository;
 import com.otus.homework.repository.CommentRepository;
+import com.otus.homework.service.MongoUserDetailsServiceImpl;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,8 +52,7 @@ class AuthorRepositoryTest {
     private CommentRepository commentRepository;
 
     @MockBean
-    @Qualifier("mongoUserDetailsServiceImpl")
-    private UserDetailsService userDetailsService;
+    private MongoUserDetailsServiceImpl userDetailsService;
 
     @DisplayName("возвращать заданного автора по его id")
     @Test

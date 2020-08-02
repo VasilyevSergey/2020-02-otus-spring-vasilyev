@@ -18,7 +18,6 @@ import org.springframework.batch.item.data.builder.MongoItemReaderBuilder;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -37,7 +36,7 @@ public class JobConfig {
     private static final String IMPORT_GENRE_STEP = "importGenreStep";
     private static final String BOOK_READER = "bookReader";
     private static final String IMPORT_BOOK_STEP = "importBookStep";
-    private static final String IMPORT_JOB = "importJob";
+    public static final String IMPORT_JOB = "importJob";
 
     private static final String QUERY_INSERT_AUTHORS = "insert into authors (id, name) values (:id, :name)";
     private static final String QUERY_INSERT_GENRES = "insert into genres (id, name) values (:id, :name)";

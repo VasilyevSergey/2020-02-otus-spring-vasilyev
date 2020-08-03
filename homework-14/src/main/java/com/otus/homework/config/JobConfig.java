@@ -52,7 +52,6 @@ public class JobConfig {
     }
 
     // import authors
-    @StepScope
     @Bean
     public MongoItemReader<Author> authorReader(MongoTemplate template) {
         return new MongoItemReaderBuilder<Author>()
@@ -64,7 +63,6 @@ public class JobConfig {
                 .build();
     }
 
-    @StepScope
     @Bean
     public JdbcBatchItemWriter<Author> authorWriter(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Author>()
@@ -75,16 +73,16 @@ public class JobConfig {
     }
 
     @Bean
-    public Step importAuthorStep(MongoItemReader authorReader, JdbcBatchItemWriter authorWriter) {
+    public Step importAuthorStep(MongoItemReader<Author> authorReader,
+                                 JdbcBatchItemWriter<Author> authorWriter) {
         return stepBuilderFactory.get(IMPORT_AUTHOR_STEP)
-                .chunk(CHUNK_SIZE)
+                .<Author, Author>chunk(CHUNK_SIZE)
                 .reader(authorReader)
                 .writer(authorWriter)
                 .build();
     }
 
     // import genres
-    @StepScope
     @Bean
     public MongoItemReader<Genre> genreReader(MongoTemplate template) {
         return new MongoItemReaderBuilder<Genre>()
@@ -96,7 +94,6 @@ public class JobConfig {
                 .build();
     }
 
-    @StepScope
     @Bean
     public JdbcBatchItemWriter<Genre> genreWriter(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Genre>()
@@ -107,16 +104,16 @@ public class JobConfig {
     }
 
     @Bean
-    public Step importGenreStep(MongoItemReader genreReader, JdbcBatchItemWriter genreWriter) {
+    public Step importGenreStep(MongoItemReader<Genre> genreReader,
+                                JdbcBatchItemWriter<Genre> genreWriter) {
         return stepBuilderFactory.get(IMPORT_GENRE_STEP)
-                .chunk(CHUNK_SIZE)
+                .<Genre, Genre>chunk(CHUNK_SIZE)
                 .reader(genreReader)
                 .writer(genreWriter)
                 .build();
     }
 
     // import books
-    @StepScope
     @Bean
     public MongoItemReader<Book> bookReader(MongoTemplate template) {
         return new MongoItemReaderBuilder<Book>()
@@ -128,7 +125,6 @@ public class JobConfig {
                 .build();
     }
 
-    @StepScope
     @Bean
     public JdbcBatchItemWriter<Book> bookWriter(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Book>()
@@ -139,9 +135,10 @@ public class JobConfig {
     }
 
     @Bean
-    public Step importBookStep(MongoItemReader bookReader, JdbcBatchItemWriter bookWriter) {
+    public Step importBookStep(MongoItemReader<Book> bookReader,
+                               JdbcBatchItemWriter<Book> bookWriter) {
         return stepBuilderFactory.get(IMPORT_BOOK_STEP)
-                .chunk(CHUNK_SIZE)
+                .<Book, Book>chunk(CHUNK_SIZE)
                 .reader(bookReader)
                 .writer(bookWriter)
                 .build();

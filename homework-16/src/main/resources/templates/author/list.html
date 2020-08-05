@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all authors</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .authors, .authors td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>Authors:</h1>
+
+<table class="authors">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Get books</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $.get('/authors').done(function (authors) {
+            authors.forEach(function (author) {
+                $('tbody').append(`
+                    <tr>
+                        <td>${author.id}</td>
+                        <td>${author.name}</td>
+                        <td><a href="/book/list-by-author/${author.id}">Get books</a></td>
+                        <td><a href="/author/edit/${author.id}">Edit</a></td>
+                        <td>
+                        <input type="button" id="delete-author-${author.id}" value="Delete" onclick="
+                            const arrayOfStrings = this.id.split('-');
+                            const authorId = arrayOfStrings[arrayOfStrings.length - 1];
+                            const url = '/authors/' + authorId;
+
+                            $.ajax({
+                                url: url,
+                                type: 'DELETE',
+                                success: function() {
+                                    window.location.assign('/');
+                                }
+                            });">
+                        </td>
+                    </tr>
+                `);
+            });
+        })
+    });
+</script>
+
+<div>
+    <label for="name-input">Name:</label>
+    <input id="name-input" name="newAuthorName" type="text"/>
+    <input id="addButton" type="button" value="Add">
+</div>
+
+<script>
+    addButton.onclick = function() {
+        const url = "/authors/";
+        const newAuthorName = $("#name-input").val();
+        if (newAuthorName !== "") {
+            // Send the data using post
+            let posting = $.post(url, {newAuthorName});
+
+            // Refresh page
+            posting.done(function() {
+                window.location.assign("/");
+            });
+        }
+    };
+</script>
+</body>
+</html>

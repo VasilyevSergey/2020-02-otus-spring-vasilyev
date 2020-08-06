@@ -1,7 +1,5 @@
 package ru.otus.homework.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,14 +12,21 @@ import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.scheduling.PollerMetadata;
-import ru.otus.homework.domain.Clothes;
-import ru.otus.homework.enums.ClothesType;
+import ru.otus.homework.service.DryCleaningService;
 
 @IntegrationComponentScan
 @ComponentScan
 @Configuration
 @EnableIntegration
 public class IntegrationConfig {
+
+    private static final String TRANSFORM_PANTS_TO_SORTS = "transformPantsToSorts";
+    private static final String CLEAN_CLOTHES = "cleanClothes";
+    private DryCleaningService dryCleaningService;
+
+    public IntegrationConfig(DryCleaningService dryCleaningService) {
+        this.dryCleaningService = dryCleaningService;
+    }
 
     @Bean
     public QueueChannel ordersChannel() {
@@ -42,15 +47,9 @@ public class IntegrationConfig {
     public IntegrationFlow dryCleaningFlow() {
         return IntegrationFlows.from("ordersChannel")
                 .split()
-                .handle("dryCleaningServiceImpl", "cleanClothes")
+                .handle(dryCleaningService, CLEAN_CLOTHES)
                 // все штаны превращаются в шорты
-                .transform(Clothes.class, c -> {
-                    if (c.getClothesType().equals(ClothesType.PANTS)) {
-                        c.setClothesType(ClothesType.SHORTS);
-                        System.out.println("Брюки превратились в штаны");
-                    }
-                    return c;
-                })
+                .transform(dryCleaningService, TRANSFORM_PANTS_TO_SORTS)
                 .aggregate()
                 .channel("clothesChannel")
                 .get();

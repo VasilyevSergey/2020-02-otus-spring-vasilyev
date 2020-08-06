@@ -1,10 +1,11 @@
 package ru.otus.homework.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import ru.otus.homework.config.DryCleaning;
 import ru.otus.homework.domain.Clothes;
+import ru.otus.homework.enums.ClothesType;
 import ru.otus.homework.enums.Condition;
 
 import java.util.ArrayList;
@@ -12,15 +13,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @SuppressWarnings("InfiniteLoopStatement")
 @Service
 public class DryCleaningServiceImpl implements DryCleaningService {
 
-    private final ApplicationContext context;
-
-    public DryCleaningServiceImpl(ApplicationContext context) {
-        this.context = context;
-    }
+    private final DryCleaning dryCleaning;
 
     @Override
     public Clothes cleanClothes(Clothes clothes) throws InterruptedException {
@@ -33,8 +31,6 @@ public class DryCleaningServiceImpl implements DryCleaningService {
 
     @Override
     public void startWork() throws InterruptedException {
-        DryCleaning dryCleaning = context.getBean(DryCleaning.class);
-
         while (true) {
             Thread.sleep(1000);
 
@@ -44,6 +40,15 @@ public class DryCleaningServiceImpl implements DryCleaningService {
             Collection<Clothes> completedOrder = dryCleaning.fulfill(order);
             System.out.println("Order completed: " + getOrderAsString(completedOrder));
         }
+    }
+
+    @Override
+    public Clothes transformPantsToSorts(Clothes clothes) {
+        if (clothes.getClothesType().equals(ClothesType.PANTS)) {
+            clothes.setClothesType(ClothesType.SHORTS);
+            System.out.println("Брюки превратились в шорты");
+        }
+        return clothes;
     }
 
     private Collection<Clothes> generateOrder() {

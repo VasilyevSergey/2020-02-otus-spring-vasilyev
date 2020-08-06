@@ -4,12 +4,14 @@ spring:
       uri: mongodb://localhost
       port: 27017
       database: library
+    rest:
+      basePath: /api
 
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: metrics, logfile, health
 
   endpoint:
     health:

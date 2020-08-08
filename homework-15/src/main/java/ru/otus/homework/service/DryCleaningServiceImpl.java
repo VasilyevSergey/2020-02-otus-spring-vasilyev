@@ -5,7 +5,6 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
 import ru.otus.homework.config.DryCleaning;
 import ru.otus.homework.domain.Clothes;
-import ru.otus.homework.enums.ClothesType;
 import ru.otus.homework.enums.Condition;
 
 import java.util.ArrayList;
@@ -40,15 +39,6 @@ public class DryCleaningServiceImpl implements DryCleaningService {
             Collection<Clothes> completedOrder = dryCleaning.fulfill(order);
             System.out.println("Order completed: " + getOrderAsString(completedOrder));
         }
-    }
-
-    @Override
-    public Clothes transformPantsToSorts(Clothes clothes) {
-        if (clothes.getClothesType().equals(ClothesType.PANTS)) {
-            clothes.setClothesType(ClothesType.SHORTS);
-            System.out.println("Брюки превратились в шорты");
-        }
-        return clothes;
     }
 
     private Collection<Clothes> generateOrder() {

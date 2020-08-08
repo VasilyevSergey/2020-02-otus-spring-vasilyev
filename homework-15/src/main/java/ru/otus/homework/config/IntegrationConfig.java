@@ -13,6 +13,7 @@ import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.scheduling.PollerMetadata;
 import ru.otus.homework.service.DryCleaningService;
+import ru.otus.homework.service.ClothesTransformer;
 
 @IntegrationComponentScan
 @ComponentScan
@@ -22,10 +23,13 @@ public class IntegrationConfig {
 
     private static final String TRANSFORM_PANTS_TO_SORTS = "transformPantsToSorts";
     private static final String CLEAN_CLOTHES = "cleanClothes";
-    private DryCleaningService dryCleaningService;
+    private final DryCleaningService dryCleaningService;
+    private final ClothesTransformer clothesTransformer;
 
-    public IntegrationConfig(DryCleaningService dryCleaningService) {
+    public IntegrationConfig(DryCleaningService dryCleaningService,
+                             ClothesTransformer clothesTransformer) {
         this.dryCleaningService = dryCleaningService;
+        this.clothesTransformer = clothesTransformer;
     }
 
     @Bean
@@ -49,7 +53,7 @@ public class IntegrationConfig {
                 .split()
                 .handle(dryCleaningService, CLEAN_CLOTHES)
                 // все штаны превращаются в шорты
-                .transform(dryCleaningService, TRANSFORM_PANTS_TO_SORTS)
+                .transform(clothesTransformer, TRANSFORM_PANTS_TO_SORTS)
                 .aggregate()
                 .channel("clothesChannel")
                 .get();

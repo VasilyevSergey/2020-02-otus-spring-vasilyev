@@ -21,7 +21,7 @@ public class MeetingServiceImpl implements MeetingService {
     private static final String MEETING_NOT_FOUND = "Встреча с id '%s' не найдена";
     private static final String CANT_DELETE_MEETING_BECAUSE_NOT_ADMIN =
             "Вы не можете отменить встречу %s, т.к. не являетесь её оранизатором";
-    private static final String YOU_HAVE_ALREADY_JOINED_THE_MEETING = "Вы уже вступили в клуб '%s'.";
+    private static final String YOU_HAVE_ALREADY_JOINED_THE_MEETING = "Вы уже являетесь участником встречи  '%s'.";
 
 
     private final UserService userService;

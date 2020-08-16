@@ -20,4 +20,6 @@ public interface BookClubService {
     List<BookClub> getAll();
 
     BookClub updateById(String id, String name, String mainTheme) throws DataLoadingException;
+
+    BookClub joinToClub(String id) throws DataLoadingException;
 }

@@ -21,6 +21,7 @@ public class BookClubServiceImpl implements BookClubService {
     private static final String BOOK_CLUB_NOT_FOUND = "Книгжный клуб с id '%s' не найдена";
     private static final String CANT_DELETE_BOOK_CLUB_BECAUSE_NOT_ADMIN =
             "Вы не можете удалить клуб '%s', т.к. не являетесь его оранизатором.";
+    private static final String YOU_HAVE_ALREADY_JOINED_THE_CLUB = "Вы уже вступили в клуб '%s'.";
 
     private final BookClubRepository bookClubRepository;
     private final UserRepository userRepository;
@@ -87,6 +88,21 @@ public class BookClubServiceImpl implements BookClubService {
         BookClub bookClub = getById(id);
         bookClub.setName(name);
         bookClub.setMainTheme(mainTheme);
+        return bookClubRepository.save(bookClub);
+    }
+
+    @Secured(USER)
+    @Override
+    public BookClub joinToClub(String id) throws DataLoadingException {
+        BookClub bookClub = getById(id);
+        User currentUser = userService.getCurrentUser();
+
+        List<User> participantList = bookClub.getParticipantList();
+        if (!participantList.contains(currentUser)) {
+            participantList.add(currentUser);
+        } else {
+            throw new DataLoadingException(String.format(YOU_HAVE_ALREADY_JOINED_THE_CLUB, bookClub.getName()));
+        }
         return bookClubRepository.save(bookClub);
     }
 }

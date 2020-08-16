@@ -134,6 +134,7 @@ public class TestChangelog {
                 LOTR,
                 1.0,
                 1.0,
+                firstUser,
                 List.of(firstUser, secondUser));
 
         template.save(LOTRMeeting);

@@ -30,9 +30,14 @@ public class Meeting {
     @DBRef
     private BookClub bookClub;
 
+    private String address;
+
     private Double longitude;
 
     private Double latitude;
+
+    @DBRef
+    private User admin;
 
     @DBRef
     private List<User> participantList;
@@ -44,6 +49,7 @@ public class Meeting {
                    BookClub bookClub,
                    Double longitude,
                    Double latitude,
+                   User admin,
                    List<User> participantList) {
         this.theme = theme;
         this.meetingsDateTime = meetingsDateTime;
@@ -52,6 +58,7 @@ public class Meeting {
         this.bookClub = bookClub;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.admin = admin;
         this.participantList = participantList;
     }
 }

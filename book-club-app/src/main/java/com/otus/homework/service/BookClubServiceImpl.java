@@ -19,33 +19,26 @@ import static com.otus.homework.security.AuthoritiesConstants.USER;
 public class BookClubServiceImpl implements BookClubService {
     private static final String ERROR_INSERT = "При создании книжного клуба '%s' произошла ошибка";
     private static final String BOOK_CLUB_NOT_FOUND = "Книгжный клуб с id '%s' не найдена";
+    private static final String CANT_DELETE_BOOK_CLUB_BECAUSE_NOT_ADMIN =
+            "Вы не можете удалить клуб '%s', т.к. не являетесь его оранизатором.";
 
     private final BookClubRepository bookClubRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     public BookClubServiceImpl(BookClubRepository bookClubRepository,
-                               UserRepository userRepository) {
+                               UserRepository userRepository,
+                               UserService userService) {
         this.bookClubRepository = bookClubRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
-
-//    @Secured("ROLE_ADMIN")
-//    @Override
-//    public long count() {
-//        return bookRepository.count();
-//    }
-
-//    @Secured("ROLE_ADMIN")
 
     @Override
     public BookClub create(String name,
                            String mainTheme) throws DataLoadingException {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-        User bookClubCreator = userRepository.findByLogin(userDetails.getUsername());
-        BookClub bookClub = new BookClub(name, bookClubCreator, mainTheme, List.of(bookClubCreator));
+        User admin = userService.getCurrentUser();
+        BookClub bookClub = new BookClub(name, admin, mainTheme, List.of(admin));
 
         try {
             return bookClubRepository.save(bookClub);
@@ -68,10 +61,12 @@ public class BookClubServiceImpl implements BookClubService {
     @Secured(USER)
     @Override
     public void deleteById(String id) throws DataLoadingException {
-        if (!bookClubRepository.existsById(id)) {
-            throw new DataLoadingException(String.format(BOOK_CLUB_NOT_FOUND, id));
+        BookClub bookClub = getById(id);
+        if (bookClub.getAdmin().equals(userService.getCurrentUser())) {
+            bookClubRepository.deleteById(id);
+        } else {
+            throw new DataLoadingException(String.format(CANT_DELETE_BOOK_CLUB_BECAUSE_NOT_ADMIN, bookClub.getName()));
         }
-        bookClubRepository.deleteById(id);
     }
 
     @Secured(USER)
@@ -91,7 +86,7 @@ public class BookClubServiceImpl implements BookClubService {
     public BookClub updateById(String id, String name, String mainTheme) throws DataLoadingException {
         BookClub bookClub = getById(id);
         bookClub.setName(name);
-        bookClub.setName(mainTheme);
+        bookClub.setMainTheme(mainTheme);
         return bookClubRepository.save(bookClub);
     }
 }

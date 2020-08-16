@@ -132,6 +132,7 @@ public class TestChangelog {
                 "Monthly meeting of the club",
                 List.of(lordOfTheRings),
                 LOTR,
+                "some address",
                 1.0,
                 1.0,
                 firstUser,

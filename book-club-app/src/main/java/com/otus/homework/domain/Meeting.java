@@ -47,6 +47,7 @@ public class Meeting {
                    String description,
                    List<Book> bookList,
                    BookClub bookClub,
+                   String address,
                    Double longitude,
                    Double latitude,
                    User admin,
@@ -56,6 +57,7 @@ public class Meeting {
         this.description = description;
         this.bookList = bookList;
         this.bookClub = bookClub;
+        this.address = address;
         this.longitude = longitude;
         this.latitude = latitude;
         this.admin = admin;

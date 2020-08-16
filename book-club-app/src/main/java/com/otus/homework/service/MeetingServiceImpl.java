@@ -40,6 +40,7 @@ public class MeetingServiceImpl implements MeetingService {
                           String description,
                           List<Book> bookList,
                           BookClub bookClub,
+                          String address,
                           Double longitude,
                           Double latitude) throws DataLoadingException {
         User admin = userService.getCurrentUser();
@@ -48,6 +49,7 @@ public class MeetingServiceImpl implements MeetingService {
                 description,
                 bookList,
                 bookClub,
+                address,
                 longitude,
                 latitude,
                 admin,

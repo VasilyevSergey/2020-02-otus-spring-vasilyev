@@ -15,6 +15,7 @@ public interface MeetingService {
                    String description,
                    List<Book> bookList,
                    BookClub bookClub,
+                   String address,
                    Double longitude,
                    Double latitude) throws DataLoadingException;
 

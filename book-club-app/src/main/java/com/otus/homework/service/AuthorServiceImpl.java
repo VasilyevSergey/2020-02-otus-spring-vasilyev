@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.otus.homework.security.AuthoritiesConstants.ADMIN;
+import static com.otus.homework.security.AuthoritiesConstants.USER;
+
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private static final String ERROR_INSERT = "При добавлении автора '%s' произошла ошибка";
@@ -24,6 +27,7 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.count();
     }
 
+    @Secured({USER, ADMIN})
     @Override
     public Author insert(String name) throws DataLoadingException {
         Author author = new Author(name);
@@ -34,6 +38,7 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
+    @Secured({USER, ADMIN})
     @Override
     public Author getById(String id) throws DataLoadingException {
         Optional<Author> author = authorRepository.findById(id);
@@ -44,7 +49,7 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({USER, ADMIN})
     @Override
     public void deleteById(String id) throws DataLoadingException {
         if (!authorRepository.existsById(id)) {
@@ -53,12 +58,13 @@ public class AuthorServiceImpl implements AuthorService {
         authorRepository.deleteById(id);
     }
 
-    @Secured("ROLE_USER")
+    @Secured({USER, ADMIN})
     @Override
     public List<Author> getAll() {
         return authorRepository.findAll();
     }
 
+    @Secured({USER, ADMIN})
     @Override
     public Author updateById(Author author) {
         return authorRepository.save(author);

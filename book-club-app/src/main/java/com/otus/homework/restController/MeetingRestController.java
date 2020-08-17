@@ -19,19 +19,19 @@ public class MeetingRestController {
     }
 
     @GetMapping("meeting")
-    public List<Meeting> getAllMeetings() {
+    public List<Meeting> getAll() {
         return meetingService.getAll();
     }
 
     @PostMapping("meeting")
-    public void createMeeting(@RequestParam("theme") String theme,
-                              @RequestParam("meetingsDateTime") LocalDateTime meetingsDateTime,
-                              @RequestParam("description") String description,
-                              @RequestParam("bookList") List<Book> bookList,
-                              @RequestParam("bookClub") BookClub bookClub,
-                              @RequestParam("address") String address,
-                              @RequestParam("longitude") Double longitude,
-                              @RequestParam("latitude") Double latitude) throws DataLoadingException {
+    public void create(@RequestParam("theme") String theme,
+                       @RequestParam("meetingsDateTime") LocalDateTime meetingsDateTime,
+                       @RequestParam("description") String description,
+                       @RequestParam("bookList") List<Book> bookList,
+                       @RequestParam("bookClub") BookClub bookClub,
+                       @RequestParam("address") String address,
+                       @RequestParam("longitude") Double longitude,
+                       @RequestParam("latitude") Double latitude) throws DataLoadingException {
         meetingService.create(
                 theme,
                 meetingsDateTime,
@@ -44,24 +44,39 @@ public class MeetingRestController {
     }
 
     @GetMapping("meeting/{id}")
-    public Meeting getMeeting(@PathVariable String id) throws DataLoadingException {
+    public Meeting get(@PathVariable String id) throws DataLoadingException {
         return meetingService.getById(id);
     }
 
     @PutMapping("meeting/{id}")
-    public void editMeeting(@PathVariable("id") String id,
-                            @RequestParam("theme") String theme,
-                            @RequestParam("meetingsDateTime") LocalDateTime meetingsDateTime,
-                            @RequestParam("description") String description,
-                            @RequestParam("bookList") List<Book> bookList,
-                            @RequestParam("address") String address,
-                            @RequestParam("longitude") Double longitude,
-                            @RequestParam("latitude") Double latitude) throws DataLoadingException {
+    public void edit(@PathVariable("id") String id,
+                     @RequestParam("theme") String theme,
+                     @RequestParam("meetingsDateTime") LocalDateTime meetingsDateTime,
+                     @RequestParam("description") String description,
+                     @RequestParam("bookList") List<Book> bookList,
+                     @RequestParam("address") String address,
+                     @RequestParam("longitude") Double longitude,
+                     @RequestParam("latitude") Double latitude) throws DataLoadingException {
         meetingService.updateById(id, theme, meetingsDateTime, description, bookList, address, longitude, latitude);
     }
 
     @DeleteMapping("meeting/{id}")
-    public void deleteMeeting(@PathVariable String id) throws DataLoadingException {
+    public void delete(@PathVariable String id) throws DataLoadingException {
         meetingService.deleteById(id);
+    }
+
+    @GetMapping("meeting/find-all-by-book-club")
+    public List<Meeting> findAllByBookClub(@RequestParam("bookClub") BookClub bookClub) {
+        return meetingService.findAllByBookClub(bookClub);
+    }
+
+    @GetMapping("meeting/find-all-by-theme")
+    public List<Meeting> findAllByTheme(@RequestParam("theme") String theme) {
+        return meetingService.findAllByTheme(theme);
+    }
+
+    @GetMapping("meeting/join/{id}")
+    public Meeting joinToClub(@PathVariable("id") String id) throws DataLoadingException {
+        return meetingService.joinToMeeting(id);
     }
 }

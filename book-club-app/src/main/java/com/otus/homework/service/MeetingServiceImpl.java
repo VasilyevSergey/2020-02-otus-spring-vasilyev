@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.otus.homework.security.AuthoritiesConstants.ADMIN;
 import static com.otus.homework.security.AuthoritiesConstants.USER;
 
 @Service
@@ -62,7 +63,7 @@ public class MeetingServiceImpl implements MeetingService {
         }
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public Meeting getById(String id) throws DataLoadingException {
         Optional<Meeting> meeting = meetingRepository.findById(id);
@@ -73,7 +74,7 @@ public class MeetingServiceImpl implements MeetingService {
         }
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public void deleteById(String id) throws DataLoadingException {
         Meeting meeting = getById(id);
@@ -84,25 +85,25 @@ public class MeetingServiceImpl implements MeetingService {
         }
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public List<Meeting> getAll() {
         return meetingRepository.findAll();
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public List<Meeting> findAllByBookClub(BookClub bookClub) {
         return meetingRepository.findAllByBookClub(bookClub);
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public List<Meeting> findAllByTheme(String theme) {
         return meetingRepository.findAllByTheme(theme);
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public Meeting updateById(String id,
                               String theme,
@@ -125,7 +126,7 @@ public class MeetingServiceImpl implements MeetingService {
         return meetingRepository.save(meeting);
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public Meeting joinToMeeting(String id) throws DataLoadingException {
         Meeting meeting = getById(id);

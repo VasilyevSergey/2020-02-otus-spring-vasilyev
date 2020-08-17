@@ -1,8 +1,6 @@
 package com.otus.homework.service;
 
-import com.otus.homework.domain.Author;
 import com.otus.homework.domain.BookClub;
-import com.otus.homework.domain.User;
 import com.otus.homework.exception.DataLoadingException;
 
 import java.util.List;

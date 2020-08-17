@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.otus.homework.security.AuthoritiesConstants.ADMIN;
+import static com.otus.homework.security.AuthoritiesConstants.USER;
+
 @Service
 public class BookServiceImpl implements BookService {
     private static final String BOOK_ALREADY_EXIST = "Книга %s уже существует";
@@ -23,15 +26,15 @@ public class BookServiceImpl implements BookService {
         this.authorService = authorService;
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({USER, ADMIN})
     @Override
     public long count() {
         return bookRepository.count();
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({USER, ADMIN})
     @Override
-    public Book insert(String title, String authorId, String genreId) throws DataLoadingException {
+    public Book insert(String title, String authorId) throws DataLoadingException {
         Author author = authorService.getById(authorId);
         Book book = new Book(title, author);
         try {
@@ -41,7 +44,7 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({USER, ADMIN})
     @Override
     public Book getById(String id) throws DataLoadingException {
         Optional<Book> book = bookRepository.findById(id);
@@ -52,7 +55,7 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({USER, ADMIN})
     @Override
     public void deleteById(String id) throws DataLoadingException {
         if (!bookRepository.existsById(id)) {
@@ -61,13 +64,13 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({USER, ADMIN})
     @Override
     public List<Book> getAll() {
         return bookRepository.findAll();
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({USER, ADMIN})
     @Override
     public Book updateById(Book book) throws DataLoadingException {
         if (!bookRepository.existsById(book.getId())) {
@@ -76,9 +79,8 @@ public class BookServiceImpl implements BookService {
         return bookRepository.save(book);
     }
 
-    @Secured("ROLE_ADMIN")
-    @Override
-    public List<Book> getByAuthorId(String id) throws DataLoadingException {
+    @Secured({USER, ADMIN})
+    public List<Book> getAllByAuthorId(String id) throws DataLoadingException {
         return bookRepository.findAllByAuthor(authorService.getById(id));
     }
 }

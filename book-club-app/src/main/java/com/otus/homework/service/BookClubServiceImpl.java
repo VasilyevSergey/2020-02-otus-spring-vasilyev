@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.otus.homework.security.AuthoritiesConstants.ADMIN;
 import static com.otus.homework.security.AuthoritiesConstants.USER;
 
 @Service
@@ -48,7 +49,7 @@ public class BookClubServiceImpl implements BookClubService {
         }
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public BookClub getById(String id) throws DataLoadingException {
         Optional<BookClub> book = bookClubRepository.findById(id);
@@ -59,7 +60,7 @@ public class BookClubServiceImpl implements BookClubService {
         }
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public void deleteById(String id) throws DataLoadingException {
         BookClub bookClub = getById(id);
@@ -70,19 +71,19 @@ public class BookClubServiceImpl implements BookClubService {
         }
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public List<BookClub> getAll() {
         return bookClubRepository.findAll();
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public List<BookClub> findAllByName(String name) {
         return bookClubRepository.findAllByName(name);
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public BookClub updateById(String id, String name, String mainTheme) throws DataLoadingException {
         BookClub bookClub = getById(id);
@@ -91,7 +92,7 @@ public class BookClubServiceImpl implements BookClubService {
         return bookClubRepository.save(bookClub);
     }
 
-    @Secured(USER)
+    @Secured({USER, ADMIN})
     @Override
     public BookClub joinToClub(String id) throws DataLoadingException {
         BookClub bookClub = getById(id);

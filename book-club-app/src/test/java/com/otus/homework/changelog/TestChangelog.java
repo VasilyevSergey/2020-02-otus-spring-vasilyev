@@ -90,8 +90,8 @@ public class TestChangelog {
 
     @ChangeSet(order = "003", id = "addBooks", author = "vasilyev")
     public void addBooks(MongoTemplate template) {
-        val firstBook = new Book("Ruslan and Lyudmila", pushkin);
-        val secondBook = new Book("Lord of the Rings", tolkien);
+        val firstBook = new Book("1", "Ruslan and Lyudmila", pushkin);
+        val secondBook = new Book("2", "Lord of the Rings", tolkien);
 
         ruslanAndLudmila = template.save(firstBook);
         lordOfTheRings = template.save(secondBook);
@@ -99,8 +99,6 @@ public class TestChangelog {
 
     @ChangeSet(order = "004", id = "addBookClubs", author = "vasilyev")
     public void addBookClubs(MongoTemplate template) {
-        BookClub firstClub = new BookClub();
-
         LOTR = new BookClub(
                 "LOTR book club",
                 firstUser,
@@ -113,14 +111,40 @@ public class TestChangelog {
                 "Fan club of Pushkin",
                 List.of(secondUser, thirdUser));
 
+        BookClub LOTR2 = new BookClub(
+                "LOTR unofficial book club",
+                secondUser,
+                "Another fan club of Lord of the rings",
+                List.of(firstUser, secondUser));
+
         template.save(LOTR);
         template.save(PuskinFanClub);
+        template.save(LOTR2);
     }
 
     @ChangeSet(order = "005", id = "addMeetings", author = "vasilyev")
     public void addMeetings(MongoTemplate template) {
         Meeting LOTRMeeting = new Meeting(
-                "1",
+                "Monthly meeting of the LOTR club",
+                LocalDateTime.of(
+                        2020,
+                        9,
+                        6,
+                        15,
+                        0,
+                        0,
+                        0),
+                "Monthly meeting of the LOTR club",
+                List.of(lordOfTheRings),
+                LOTR,
+                "some address",
+                1.0,
+                1.0,
+                firstUser,
+                List.of(firstUser, secondUser));
+
+        Meeting anotherLOTRMeeting = new Meeting(
+                "Another meeting",
                 LocalDateTime.of(
                         2020,
                         9,
@@ -139,5 +163,6 @@ public class TestChangelog {
                 List.of(firstUser, secondUser));
 
         template.save(LOTRMeeting);
+        template.save(anotherLOTRMeeting);
     }
 }

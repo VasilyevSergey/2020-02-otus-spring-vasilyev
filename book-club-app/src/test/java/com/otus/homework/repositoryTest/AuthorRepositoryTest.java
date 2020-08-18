@@ -22,24 +22,15 @@ import static org.assertj.core.api.Assertions.fail;
 
 @DataMongoTest
 @EnableConfigurationProperties
-@ComponentScan({"com.otus.homework.config"/*, "com.otus.homework.events"*/})
+@ComponentScan({"com.otus.homework.config"})
 @DisplayName("Dao для работы с авторами должен ")
 class AuthorRepositoryTest {
-    private static final Author EXPECTED_AUTHOR = new Author("1", "Pushkin");
     private static final Author FIRST_AUTHOR = new Author("1", "Pushkin");
     private static final Author SECOND_AUTHOR = new Author("2", "Tolkien");
     private static final Author INSERTED_AUTHOR = new Author("3", "NewAuthor");
 
-    private static final Book EXPECTED_BOOK = new Book(
-            "1",
-            "Ruslan and Lyudmila",
-            EXPECTED_AUTHOR);
-
     @Autowired
     private AuthorRepository authorRepository;
-
-//    @Autowired
-//    private BookRepository bookRepository;
 
     @MockBean
     private MongoUserDetailsServiceImpl userDetailsService;
@@ -47,9 +38,9 @@ class AuthorRepositoryTest {
     @DisplayName("возвращать заданного автора по его id")
     @Test
     void shouldReturnExpectedAuthorById() {
-        val optionalActualAuthor = authorRepository.findById(EXPECTED_AUTHOR.getId());
+        val optionalActualAuthor = authorRepository.findById(FIRST_AUTHOR.getId());
         assertThat(optionalActualAuthor).isPresent().get()
-                .isEqualToComparingFieldByField(EXPECTED_AUTHOR);
+                .isEqualToComparingFieldByField(FIRST_AUTHOR);
     }
 
     @DisplayName(" добавлять автора")

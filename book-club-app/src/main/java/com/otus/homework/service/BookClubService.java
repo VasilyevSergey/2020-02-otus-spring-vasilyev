@@ -11,7 +11,7 @@ public interface BookClubService {
 
     BookClub getById(String id) throws DataLoadingException;
 
-    List<BookClub> findAllByName(String name);
+    List<BookClub> findAllByNameContaining(String fragment);
 
     void deleteById(String id) throws DataLoadingException;
 

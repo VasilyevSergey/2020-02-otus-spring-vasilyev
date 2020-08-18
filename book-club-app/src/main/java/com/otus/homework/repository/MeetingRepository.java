@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface MeetingRepository extends MongoRepository<Meeting, String> {
 
-
-    List<Meeting> findAllByBookClub(BookClub name);
+    List<Meeting> findAllByBookClub(BookClub bookClub);
 
     List<Meeting> findAllByTheme(String theme);
 }

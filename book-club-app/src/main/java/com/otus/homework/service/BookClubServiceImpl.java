@@ -6,8 +6,6 @@ import com.otus.homework.exception.DataLoadingException;
 import com.otus.homework.repository.BookClubRepository;
 import com.otus.homework.repository.UserRepository;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -79,8 +77,8 @@ public class BookClubServiceImpl implements BookClubService {
 
     @Secured({USER, ADMIN})
     @Override
-    public List<BookClub> findAllByName(String name) {
-        return bookClubRepository.findAllByName(name);
+    public List<BookClub> findAllByNameContaining(String fragment) {
+        return bookClubRepository.findAllByNameContaining(fragment);
     }
 
     @Secured({USER, ADMIN})

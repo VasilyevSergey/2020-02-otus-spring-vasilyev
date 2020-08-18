@@ -21,9 +21,9 @@ public class BookClubRestController {
         return bookClubService.getAll();
     }
 
-    @GetMapping("book-club/find-by-name")
-    public List<BookClub> findAllByName(@RequestParam("name") String name) {
-        return bookClubService.findAllByName(name);
+    @GetMapping("book-club/find-by-name-fragment")
+    public List<BookClub> findAllByName(@RequestParam("fragment") String fragment) {
+        return bookClubService.findAllByNameContaining(fragment);
     }
 
     @GetMapping("book-club/join/{id}")

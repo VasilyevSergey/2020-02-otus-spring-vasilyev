@@ -14,8 +14,8 @@ public class AuthorController {
         return "author/list";
     }
 
-    @GetMapping("/author/edit/{id}")
-    public String editPage(@PathVariable String id) {
+    @GetMapping("/author/edit/")
+    public String editPage() {
         return "author/edit";
     }
 }

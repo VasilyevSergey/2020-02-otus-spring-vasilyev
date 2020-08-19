@@ -1,17 +1,17 @@
 package com.otus.homework.service;
 
-import com.otus.homework.domain.Book;
 import com.otus.homework.domain.BookClub;
 import com.otus.homework.domain.Meeting;
 import com.otus.homework.domain.User;
+import com.otus.homework.dto.MeetingDto;
 import com.otus.homework.exception.DataLoadingException;
 import com.otus.homework.repository.MeetingRepository;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.otus.homework.security.AuthoritiesConstants.ADMIN;
 import static com.otus.homework.security.AuthoritiesConstants.USER;
@@ -36,100 +36,88 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-    public Meeting create(String theme,
-                          LocalDateTime meetingsDateTime,
-                          String description,
-                          List<Book> bookList,
-                          BookClub bookClub,
-                          String address,
-                          Double longitude,
-                          Double latitude) throws DataLoadingException {
+    public MeetingDto create(MeetingDto meetingDto) throws DataLoadingException {
         User admin = userService.getCurrentUser();
-        Meeting meeting = new Meeting(theme,
-                meetingsDateTime,
-                description,
-                bookList,
-                bookClub,
-                address,
-                longitude,
-                latitude,
-                admin,
-                List.of(admin));
+        Meeting meeting = meetingDto.toEntity();
+        meeting.setAdmin(admin);
+        meeting.setParticipantList(List.of(admin));
 
         try {
-            return meetingRepository.save(meeting);
+            return MeetingDto.toDto(meetingRepository.save(meeting));
         } catch (Exception e) {
-            throw new DataLoadingException(String.format(ERROR_INSERT, theme), e.getCause());
+            throw new DataLoadingException(String.format(ERROR_INSERT, meetingDto.getTheme()), e.getCause());
         }
     }
 
     @Secured({USER, ADMIN})
     @Override
-    public Meeting getById(String id) throws DataLoadingException {
-        Optional<Meeting> meeting = meetingRepository.findById(id);
-        if (meeting.isPresent()) {
-            return meeting.get();
-        } else {
-            throw new DataLoadingException(String.format(MEETING_NOT_FOUND, id));
-        }
+    public MeetingDto getById(String id) throws DataLoadingException {
+         Meeting meeting = meetingRepository.findById(id)
+                .orElseThrow(() -> new DataLoadingException(String.format(MEETING_NOT_FOUND, id)));
+        return MeetingDto.toDto(meeting);
     }
 
     @Secured({USER, ADMIN})
     @Override
     public void deleteById(String id) throws DataLoadingException {
-        Meeting meeting = getById(id);
-        if (meeting.getAdmin().equals(userService.getCurrentUser())) {
+        MeetingDto meetingDto = getById(id);
+        if (meetingDto.getAdmin().equals(userService.getCurrentUser())) {
             meetingRepository.deleteById(id);
         } else {
-            throw new DataLoadingException(String.format(CANT_DELETE_MEETING_BECAUSE_NOT_ADMIN, meeting.getTheme()));
+            throw new DataLoadingException(String.format(CANT_DELETE_MEETING_BECAUSE_NOT_ADMIN, meetingDto.getTheme()));
         }
     }
 
     @Secured({USER, ADMIN})
     @Override
-    public List<Meeting> getAll() {
-        return meetingRepository.findAll();
+    public List<MeetingDto> getAll() {
+        return meetingRepository.findAll()
+                                .stream()
+                                .map(MeetingDto::toDto)
+                                .collect(Collectors.toList());
     }
 
     @Secured({USER, ADMIN})
     @Override
-    public List<Meeting> findAllByBookClub(BookClub bookClub) {
-        return meetingRepository.findAllByBookClub(bookClub);
+    public List<MeetingDto> findAllByBookClub(BookClub bookClub) {
+        return meetingRepository.findAllByBookClub(bookClub)
+                                .stream()
+                                .map(MeetingDto::toDto)
+                                .collect(Collectors.toList());
     }
 
     @Secured({USER, ADMIN})
     @Override
-    public List<Meeting> findAllByTheme(String theme) {
-        return meetingRepository.findAllByTheme(theme);
+    public List<MeetingDto> findAllByTheme(String theme) {
+        return meetingRepository.findAllByTheme(theme)
+                                .stream()
+                                .map(MeetingDto::toDto)
+                                .collect(Collectors.toList());
     }
 
     @Secured({USER, ADMIN})
     @Override
-    public Meeting updateById(String id,
-                              String theme,
-                              LocalDateTime meetingsDateTime,
-                              String description,
-                              List<Book> bookList,
-                              String address,
-                              Double longitude,
-                              Double latitude) throws DataLoadingException {
-        Meeting meeting = getById(id);
+    public MeetingDto updateById(MeetingDto meetingDto) throws DataLoadingException {
+        Meeting meeting = meetingRepository.findById(meetingDto.getId())
+                .orElseThrow(() -> new DataLoadingException(String.format(MEETING_NOT_FOUND, meetingDto.getId())));
 
-        meeting.setTheme(theme);
-        meeting.setMeetingsDateTime(meetingsDateTime);
-        meeting.setDescription(description);
-        meeting.setBookList(bookList);
-        meeting.setAddress(address);
-        meeting.setLongitude(longitude);
-        meeting.setLatitude(latitude);
+        meeting.setTheme(meetingDto.getTheme());
+        meeting.setMeetingsDateTime(meetingDto.getMeetingsDateTime());
+        meeting.setDescription(meetingDto.getDescription());
+        meeting.setBookList(meetingDto.getBookList());
+        meeting.setAddress(meetingDto.getAddress());
+        meeting.setLongitude(meetingDto.getLongitude());
+        meeting.setLatitude(meetingDto.getLatitude());
 
-        return meetingRepository.save(meeting);
+        return MeetingDto.toDto(meetingRepository.save(meeting));
     }
 
     @Secured({USER, ADMIN})
     @Override
-    public Meeting joinToMeeting(String id) throws DataLoadingException {
-        Meeting meeting = getById(id);
+    public MeetingDto joinToMeeting(String id) throws DataLoadingException {
+        Meeting meeting = meetingRepository.findById(id)
+                .orElseThrow(() -> new DataLoadingException(String.format(MEETING_NOT_FOUND, id)));
+
         User currentUser = userService.getCurrentUser();
 
         List<User> participantList = meeting.getParticipantList();
@@ -138,6 +126,6 @@ public class MeetingServiceImpl implements MeetingService {
         } else {
             throw new DataLoadingException(String.format(YOU_HAVE_ALREADY_JOINED_THE_MEETING, meeting.getTheme()));
         }
-        return meetingRepository.save(meeting);
+        return MeetingDto.toDto(meetingRepository.save(meeting));
     }
 }

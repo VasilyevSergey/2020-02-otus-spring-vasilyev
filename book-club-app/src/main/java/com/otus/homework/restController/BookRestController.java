@@ -21,23 +21,23 @@ public class BookRestController {
         this.bookService = bookService;
     }
 
-    @GetMapping("book")
+    @GetMapping("api/v1/book")
     public List<Book> getAll() {
         return bookService.getAll();
     }
 
-    @PostMapping("book")
+    @PostMapping("api/v1/book")
     public void add(@RequestParam("title") String title,
                     @RequestParam("authorId") String authorId) throws DataLoadingException {
         bookService.insert(title, authorId);
     }
 
-    @GetMapping("book/{id}")
+    @GetMapping("api/v1/book/{id}")
     public Book get(@PathVariable String id) throws DataLoadingException {
         return bookService.getById(id);
     }
 
-    @PutMapping("book/{id}")
+    @PutMapping("api/v1/book/{id}")
     public void edit(@PathVariable("id") String id,
                      @RequestParam("title") String title,
                      @RequestParam("authorId") String authorId) throws DataLoadingException {
@@ -46,12 +46,12 @@ public class BookRestController {
         bookService.updateById(updatedBook);
     }
 
-    @DeleteMapping("book/{id}")
+    @DeleteMapping("api/v1/book/{id}")
     public void delete(@PathVariable String id) throws DataLoadingException {
         bookService.deleteById(id);
     }
 
-    @GetMapping("book/by-author/{id}")
+    @GetMapping("api/v1/book/by-author/{id}")
     public List<Book> getAllByAuthorId(@PathVariable String id) throws DataLoadingException {
         return bookService.getAllByAuthorId(id);
     }

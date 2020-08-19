@@ -16,40 +16,40 @@ public class BookClubRestController {
         this.bookClubService = bookClubService;
     }
 
-    @GetMapping("book-club")
+    @GetMapping("api/v1/book-club")
     public List<BookClub> getAll() {
         return bookClubService.getAll();
     }
 
-    @GetMapping("book-club/find-by-name-fragment")
+    @GetMapping("api/v1/book-club/find-by-name-fragment")
     public List<BookClub> findAllByName(@RequestParam("fragment") String fragment) {
         return bookClubService.findAllByNameContaining(fragment);
     }
 
-    @GetMapping("book-club/join/{id}")
+    @GetMapping("api/v1/book-club/join/{id}")
     public BookClub joinToClub(@PathVariable("id") String id) throws DataLoadingException {
         return bookClubService.joinToClub(id);
     }
 
-    @PostMapping("book-club")
+    @PostMapping("api/v1/book-club")
     public void create(@RequestParam("name") String name,
                        @RequestParam("mainTheme") String mainTheme) throws DataLoadingException {
         bookClubService.create(name, mainTheme);
     }
 
-    @GetMapping("book-club/{id}")
+    @GetMapping("api/v1/book-club/{id}")
     public BookClub getById(@PathVariable String id) throws DataLoadingException {
         return bookClubService.getById(id);
     }
 
-    @PutMapping("book-club/{id}")
+    @PutMapping("api/v1/book-club/{id}")
     public void editById(@PathVariable("id") String id,
                          @RequestParam("name") String name,
                          @RequestParam("mainTheme") String mainTheme) throws DataLoadingException {
         bookClubService.updateById(id, name, mainTheme);
     }
 
-    @DeleteMapping("book-club/{id}")
+    @DeleteMapping("api/v1/book-club/{id}")
     public void delete(@PathVariable String id) throws DataLoadingException {
         bookClubService.deleteById(id);
     }

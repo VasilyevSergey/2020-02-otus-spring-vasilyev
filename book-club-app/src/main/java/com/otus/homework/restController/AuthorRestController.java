@@ -16,29 +16,29 @@ public class AuthorRestController {
         this.authorService = authorService;
     }
 
-    @GetMapping("authors")
+    @GetMapping("api/v1/authors")
     public List<Author> getAllAuthors() {
         return authorService.getAll();
     }
 
-    @PostMapping("authors")
+    @PostMapping("api/v1/authors")
     public void addAuthor(@RequestParam("newAuthorName") String newAuthorName) throws DataLoadingException {
         authorService.insert(newAuthorName);
     }
 
-    @GetMapping("authors/{id}")
+    @GetMapping("api/v1/authors/{id}")
     public Author getAuthor(@PathVariable String id) throws DataLoadingException {
         return authorService.getById(id);
     }
 
-    @PutMapping("authors/{id}")
+    @PutMapping("api/v1/authors/{id}")
     public void editAuthor(@PathVariable("id") String id,
                            @RequestParam("name") String name) {
         Author updatedAuthor = new Author(id, name);
         authorService.updateById(updatedAuthor);
     }
 
-    @DeleteMapping("authors/{id}")
+    @DeleteMapping("api/v1/authors/{id}")
     public void deleteAuthor(@PathVariable String id) throws DataLoadingException {
         authorService.deleteById(id);
     }

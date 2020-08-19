@@ -47,12 +47,8 @@ public class BookServiceImpl implements BookService {
     @Secured({USER, ADMIN})
     @Override
     public Book getById(String id) throws DataLoadingException {
-        Optional<Book> book = bookRepository.findById(id);
-        if (book.isPresent()) {
-            return book.get();
-        } else {
-            throw new DataLoadingException(String.format(BOOK_NOT_FOUND, id));
-        }
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new DataLoadingException(String.format(BOOK_NOT_FOUND, id)));
     }
 
     @Secured({USER, ADMIN})

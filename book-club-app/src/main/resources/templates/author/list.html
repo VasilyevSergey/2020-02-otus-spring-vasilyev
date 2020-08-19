@@ -33,7 +33,7 @@
 
 <script>
     $(function () {
-        $.get('/authors').done(function (authors) {
+        $.get('api/v1/authors').done(function (authors) {
             authors.forEach(function (author) {
                 $('tbody').append(`
                     <tr>
@@ -45,7 +45,7 @@
                         <input type="button" id="delete-author-${author.id}" value="Delete" onclick="
                             const arrayOfStrings = this.id.split('-');
                             const authorId = arrayOfStrings[arrayOfStrings.length - 1];
-                            const url = '/authors/' + authorId;
+                            const url = 'api/v1/authors/' + authorId;
 
                             $.ajax({
                                 url: url,
@@ -77,7 +77,7 @@
 
 <script>
     addButton.onclick = function() {
-        const url = "/authors/";
+        const url = "api/v1/authors/";
         const newAuthorName = $("#name-input").val();
         if (newAuthorName !== "") {
             // Send the data using post

@@ -41,12 +41,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Secured({USER, ADMIN})
     @Override
     public Author getById(String id) throws DataLoadingException {
-        Optional<Author> author = authorRepository.findById(id);
-        if (author.isPresent()) {
-            return author.get();
-        } else {
-            throw new DataLoadingException(String.format(AUTHOR_NOT_FOUND, id));
-        }
+        return authorRepository.findById(id)
+                .orElseThrow(() -> new DataLoadingException(String.format(AUTHOR_NOT_FOUND, id)));
     }
 
     @Secured({USER, ADMIN})

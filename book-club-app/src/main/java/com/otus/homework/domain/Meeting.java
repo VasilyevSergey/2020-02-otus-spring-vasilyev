@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,28 +19,38 @@ public class Meeting {
     @Id
     private String id;
 
+    @Field
     private String theme;
 
+    @Field
     private LocalDateTime meetingsDateTime;
 
+    @Field
     private String description;
 
     @DBRef
+    @Field
     private List<Book> bookList;
 
     @DBRef
+    @Field
     private BookClub bookClub;
 
+    @Field
     private String address;
 
+    @Field
     private Double longitude;
 
+    @Field
     private Double latitude;
 
     @DBRef
+    @Field
     private User admin;
 
     @DBRef
+    @Field
     private List<User> participantList;
 
     public Meeting(String theme,

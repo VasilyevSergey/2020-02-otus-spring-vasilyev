@@ -50,12 +50,8 @@ public class BookClubServiceImpl implements BookClubService {
     @Secured({USER, ADMIN})
     @Override
     public BookClub getById(String id) throws DataLoadingException {
-        Optional<BookClub> book = bookClubRepository.findById(id);
-        if (book.isPresent()) {
-            return book.get();
-        } else {
-            throw new DataLoadingException(String.format(BOOK_CLUB_NOT_FOUND, id));
-        }
+        return bookClubRepository.findById(id)
+                .orElseThrow(() -> new DataLoadingException(String.format(BOOK_CLUB_NOT_FOUND, id)));
     }
 
     @Secured({USER, ADMIN})

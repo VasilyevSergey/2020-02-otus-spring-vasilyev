@@ -42,7 +42,7 @@
         let pathname = window.location.pathname;
          const arrayOfStrings = pathname.split("/");
          const authorId = arrayOfStrings[arrayOfStrings.length - 1];
-         $.get('/authors/' + authorId).done(function (author) {
+         $.get('api/v1/authors/' + authorId).done(function (author) {
              $("#id-input").val(author.id);
              $("#name-input").val(author.name);
          })
@@ -51,7 +51,7 @@
 
 <script>
     submitButton.onclick = function() {
-        const url = "/authors/";
+        const url = "api/v1/authors/";
         const authorId = $("#id-input").val();
         const name   = $("#name-input").val();
 

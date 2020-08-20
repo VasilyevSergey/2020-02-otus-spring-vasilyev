@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
 @EnableConfigurationProperties
-@ComponentScan({"com.otus.homework.config"})
+@ComponentScan({"com.otus.homework.config", "com.otus.homework.events"})
 @DisplayName("Dao для работы с пользователями ")
 class UserRepositoryTest {
     private static final String USERNAME = "firstUser";

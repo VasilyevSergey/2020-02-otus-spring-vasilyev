@@ -162,7 +162,27 @@ public class TestChangelog {
                 firstUser,
                 List.of(firstUser, secondUser));
 
+        Meeting pushkinMeeting = new Meeting(
+                "Pushkin meeting",
+                LocalDateTime.of(
+                        2020,
+                        9,
+                        6,
+                        15,
+                        0,
+                        0,
+                        0),
+                "Monthly meeting of the club",
+                List.of(ruslanAndLudmila),
+                PuskinFanClub,
+                "some address",
+                1.0,
+                1.0,
+                firstUser,
+                List.of(firstUser, secondUser));
+
         template.save(LOTRMeeting);
         template.save(anotherLOTRMeeting);
+        template.save(pushkinMeeting);
     }
 }

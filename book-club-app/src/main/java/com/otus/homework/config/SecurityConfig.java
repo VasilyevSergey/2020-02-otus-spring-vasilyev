@@ -26,7 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/configuration/ui",
             "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**"
+            "/webjars/**",
+            "/actuator/**"
     };
 
     public SecurityConfig(MongoUserDetailsServiceImpl userDetailsService) {

@@ -130,6 +130,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>book-club-docker</finalName>
     </build>
-
 </project>

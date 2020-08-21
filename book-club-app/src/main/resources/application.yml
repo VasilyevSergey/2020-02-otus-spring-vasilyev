@@ -1,8 +1,8 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://admin:admin@otus.wsu2f.mongodb.net/bookClub?retryWrites=true&w=majority
-      database: bookClub
+      uri: ${MONGO_URI}
+      database: ${MONGO_DB}
 
 management:
   endpoints:

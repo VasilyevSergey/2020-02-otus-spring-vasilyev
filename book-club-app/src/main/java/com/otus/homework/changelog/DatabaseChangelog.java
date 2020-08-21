@@ -33,8 +33,13 @@ public class DatabaseChangelog {
     BookClub LOTR;
 
     @ChangeSet(order = "000", id = "dropDB", author = "vasilyev", runAlways = true)
-    public void dropDB(MongoDatabase database) {
-        database.drop();
+    public void dropDB(MongoTemplate template) {
+        template.dropCollection("meetings");
+        template.dropCollection("book_clubs");
+        template.dropCollection("books");
+        template.dropCollection("authors");
+        template.dropCollection("users");
+        template.dropCollection("mongockChangeLog");
     }
 
     @ChangeSet(order = "001", id = "addUsers", author = "vasilyev", runAlways = true)

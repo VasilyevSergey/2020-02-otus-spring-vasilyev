@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8"/>
-    <title>List of all authors</title>
+    <title>List of all book club</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -15,15 +15,18 @@
     <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-<h1>Authors:</h1>
+<h1>Book clubs:</h1>
 
 <table class="authors">
     <thead>
     <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Get books</th>
-        <th>Edit</th>
+        <th>Main theme</th>
+        <th>Admin</th>
+        <th>Participant list</th>
+        <th>Join/Leave</th>
+        <th>Meetings</th>
         <th>Delete</th>
     </tr>
     </thead>
@@ -33,19 +36,22 @@
 
 <script>
     $(function () {
-        $.get('api/v1/authors').done(function (authors) {
-            authors.forEach(function (author) {
+        $.get('api/v1/book-club').done(function (bookClubs) {
+            bookClubs.forEach(function (bookClub) {
                 $('tbody').append(`
                     <tr>
-                        <td>${author.id}</td>
-                        <td>${author.name}</td>
-                        <td><a href="/book/list-by-author/${author.id}">Get books</a></td>
-                        <td><a href="/author/edit/${author.id}">Edit</a></td>
+                        <td>${bookClub.id}</td>
+                        <td>${bookClub.name}</td>
+                        <td>${bookClub.mainTheme}</td>
+                        <td>${bookClub.admin.login}</td>
+                        <td><a href="/bookClub/list/">List</a></td>
+                        <td><a href="/bookClub/join/">Join/Leave</a></td>
+                        <td><a href="/bookClub/${bookClub.id}/meetings/list/">Meetings</a></td>
                         <td>
-                        <input type="button" id="delete-author-${author.id}" value="Delete" onclick="
+                        <input type="button" id="delete-bookclub-${bookClub.id}" value="Delete" onclick="
                             const arrayOfStrings = this.id.split('-');
-                            const authorId = arrayOfStrings[arrayOfStrings.length - 1];
-                            const url = 'api/v1/authors/' + authorId;
+                            const bookClubId = arrayOfStrings[arrayOfStrings.length - 1];
+                            const url = 'api/v1/book-club/' + bookClubId;
 
                             $.ajax({
                                 url: url,
@@ -57,6 +63,8 @@
                                     let msg = '';
                                     if (jqXHR.status === 403) {
                                         msg = 'Вам запрещено выполение этого действия!';
+                                    } else {
+                                        msg = jqXHR.responseJSON.message;
                                     }
                                     alert(msg);
                                 },
@@ -69,26 +77,5 @@
     });
 </script>
 
-<div>
-    <label for="name-input">Name:</label>
-    <input id="name-input" name="newAuthorName" type="text"/>
-    <input id="addButton" type="button" value="Add">
-</div>
-
-<script>
-    addButton.onclick = function() {
-        const url = "api/v1/authors/";
-        const newAuthorName = $("#name-input").val();
-        if (newAuthorName !== "") {
-            // Send the data using post
-            let posting = $.post(url, {newAuthorName});
-
-            // Refresh page
-            posting.done(function() {
-                window.location.assign("/");
-            });
-        }
-    };
-</script>
 </body>
 </html>

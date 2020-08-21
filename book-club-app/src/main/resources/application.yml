@@ -1,8 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost
-      port: 27017
+      uri: mongodb+srv://admin:admin@otus.wsu2f.mongodb.net/bookClub?retryWrites=true&w=majority
       database: bookClub
 
 management:

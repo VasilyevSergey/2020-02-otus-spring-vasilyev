@@ -72,8 +72,8 @@
 
                 meetings.forEach(function (meeting) {
                     marker = new ymaps.Placemark([meeting.longitude, meeting.latitude], {
-                        hintContent: meeting.theme,
-                        balloonContent: meeting.meetingsDateTime
+                        hintContent: meeting.theme + '<br/>' + meeting.meetingsDateTime,
+                        balloonContent: meeting.address
                     });
 
                     map.geoObjects.add(marker)

@@ -113,14 +113,40 @@ public class DatabaseChangelog {
                 "Fan club of Pushkin",
                 List.of(secondUser, thirdUser));
 
+        BookClub LOTR2 = new BookClub(
+                "LOTR unofficial book club",
+                secondUser,
+                "Another fan club of Lord of the rings",
+                List.of(firstUser, secondUser));
+
         template.save(LOTR);
         template.save(PuskinFanClub);
+        template.save(LOTR2);
     }
 
     @ChangeSet(order = "005", id = "addMeetings", author = "vasilyev")
     public void addMeetings(MongoTemplate template) {
         Meeting LOTRMeeting = new Meeting(
-                "1",
+                "Monthly meeting of the LOTR club",
+                LocalDateTime.of(
+                        2020,
+                        9,
+                        6,
+                        15,
+                        0,
+                        0,
+                        0),
+                "Monthly meeting of the LOTR club",
+                List.of(lordOfTheRings),
+                LOTR,
+                "some address",
+                55.751611,
+                37.609540,
+                firstUser,
+                List.of(firstUser, secondUser));
+
+        Meeting anotherLOTRMeeting = new Meeting(
+                "Another meeting",
                 LocalDateTime.of(
                         2020,
                         9,
@@ -133,11 +159,32 @@ public class DatabaseChangelog {
                 List.of(lordOfTheRings),
                 LOTR,
                 "some address",
-                1.0,
-                1.0,
+                55.752083,
+                37.608264,
+                firstUser,
+                List.of(firstUser, secondUser));
+
+        Meeting pushkinMeeting = new Meeting(
+                "Pushkin meeting",
+                LocalDateTime.of(
+                        2020,
+                        9,
+                        6,
+                        15,
+                        0,
+                        0,
+                        0),
+                "Monthly meeting of the club",
+                List.of(ruslanAndLudmila),
+                PuskinFanClub,
+                "some address",
+                55.750732,
+                37.608000,
                 firstUser,
                 List.of(firstUser, secondUser));
 
         template.save(LOTRMeeting);
+        template.save(anotherLOTRMeeting);
+        template.save(pushkinMeeting);
     }
 }

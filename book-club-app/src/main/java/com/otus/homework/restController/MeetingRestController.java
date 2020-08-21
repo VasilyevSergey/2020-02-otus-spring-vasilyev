@@ -1,6 +1,5 @@
 package com.otus.homework.restController;
 
-import com.otus.homework.domain.BookClub;
 import com.otus.homework.dto.MeetingDto;
 import com.otus.homework.exception.DataLoadingException;
 import com.otus.homework.service.MeetingService;
@@ -41,9 +40,9 @@ public class MeetingRestController {
         meetingService.deleteById(id);
     }
 
-    @GetMapping("api/v1/meeting/find-all-by-book-club")
-    public List<MeetingDto> findAllByBookClub(@RequestParam("bookClub") BookClub bookClub) {
-        return meetingService.findAllByBookClub(bookClub);
+    @GetMapping("api/v1/meeting/find-all-by-book-club/{id}")
+    public List<MeetingDto> findAllByBookClub(@PathVariable String id) throws DataLoadingException {
+        return meetingService.findAllByBookClub(id);
     }
 
     @GetMapping("api/v1/meeting/find-all-by-theme")
@@ -52,7 +51,7 @@ public class MeetingRestController {
     }
 
     @GetMapping("api/v1/meeting/join/{id}")
-    public MeetingDto joinToClub(@PathVariable("id") String id) throws DataLoadingException {
+    public MeetingDto joinToMeeting(@PathVariable("id") String id) throws DataLoadingException {
         return meetingService.joinToMeeting(id);
     }
 }

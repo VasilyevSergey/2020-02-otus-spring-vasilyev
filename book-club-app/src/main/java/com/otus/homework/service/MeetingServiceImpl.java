@@ -10,7 +10,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.otus.homework.security.AuthoritiesConstants.ADMIN;
@@ -24,15 +23,17 @@ public class MeetingServiceImpl implements MeetingService {
             "Вы не можете отменить встречу %s, т.к. не являетесь её оранизатором";
     private static final String YOU_HAVE_ALREADY_JOINED_THE_MEETING = "Вы уже являетесь участником встречи  '%s'.";
 
-
     private final UserService userService;
     private final MeetingRepository meetingRepository;
+    private final BookClubService bookClubService;
 
     public MeetingServiceImpl(
             UserService userService,
-            MeetingRepository meetingRepository) {
+            MeetingRepository meetingRepository,
+            BookClubService bookClubService) {
         this.userService = userService;
         this.meetingRepository = meetingRepository;
+        this.bookClubService = bookClubService;
     }
 
     @Override
@@ -79,7 +80,8 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Secured({USER, ADMIN})
     @Override
-    public List<MeetingDto> findAllByBookClub(BookClub bookClub) {
+    public List<MeetingDto> findAllByBookClub(String id) throws DataLoadingException {
+        BookClub bookClub = bookClubService.getById(id);
         return meetingRepository.findAllByBookClub(bookClub)
                                 .stream()
                                 .map(MeetingDto::toDto)

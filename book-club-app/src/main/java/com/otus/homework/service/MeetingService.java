@@ -1,6 +1,5 @@
 package com.otus.homework.service;
 
-import com.otus.homework.domain.BookClub;
 import com.otus.homework.dto.MeetingDto;
 import com.otus.homework.exception.DataLoadingException;
 
@@ -18,7 +17,7 @@ public interface MeetingService {
 
     MeetingDto updateById(MeetingDto meetingDto) throws DataLoadingException;
 
-    List<MeetingDto> findAllByBookClub(BookClub name);
+    List<MeetingDto> findAllByBookClub(String id) throws DataLoadingException;
 
     List<MeetingDto> findAllByTheme(String theme);
 

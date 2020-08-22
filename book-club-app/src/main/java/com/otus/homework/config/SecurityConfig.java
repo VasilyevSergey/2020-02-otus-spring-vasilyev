@@ -42,7 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/**").authenticated()
                 .and()
                 .formLogin()
-                .and().rememberMe();
+                .and()
+                .rememberMe()
+                .and()
+                .logout().logoutUrl("/logout");;
 
         http.rememberMe()
                 .key("MyRememberMeKey")

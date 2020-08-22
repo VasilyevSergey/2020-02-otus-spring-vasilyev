@@ -21,7 +21,7 @@ public class BookClubRestController {
         return bookClubService.getAll();
     }
 
-    @GetMapping("api/v1/book-club/find-by-name-fragment")
+    @GetMapping("api/v1/book-club/find")
     public List<BookClub> findAllByName(@RequestParam("fragment") String fragment) {
         return bookClubService.findAllByNameContaining(fragment);
     }

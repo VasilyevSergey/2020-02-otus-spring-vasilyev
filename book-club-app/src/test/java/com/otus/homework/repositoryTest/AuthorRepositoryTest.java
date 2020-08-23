@@ -15,6 +15,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,11 +32,6 @@ class AuthorRepositoryTest {
     private static final Author FIRST_AUTHOR = new Author("1", "Pushkin");
     private static final Author SECOND_AUTHOR = new Author("2", "Tolkien");
     private static final Author INSERTED_AUTHOR = new Author("3", "NewAuthor");
-
-    private static final Book EXPECTED_BOOK = new Book(
-            "1",
-            "Ruslan and Lyudmila",
-            FIRST_AUTHOR);
 
     @Autowired
     private AuthorRepository authorRepository;
@@ -73,11 +69,10 @@ class AuthorRepositoryTest {
         assertThat(actualAuthorList).isEqualTo(expectedAuthorList);
     }
 
+    @DirtiesContext
     @DisplayName("удалять автора, его книги и чистить списки книг во встречах")
     @Test
-    // если поменять название теста, например, на shouldDeleteAuthorAndBooks,
-    // то падают тесты shouldGetAllAuthors() и shouldReturnExpectedAuthorById()
-    void deleteAuthorTest() {
+    void shouldDeleteAuthorAndBooks() {
         Optional<Author> author = authorRepository.findById(FIRST_AUTHOR.getId());
         if (author.isEmpty()) {
             fail("Автора не существует");

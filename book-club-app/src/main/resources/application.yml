@@ -1,0 +1,23 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+      database: ${MONGO_DB}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics, logfile, health
+
+  endpoint:
+    health:
+      show-details: always
+
+  health:
+    mongo:
+      enabled: true
+
+logging:
+  file:
+    path: target/app.log

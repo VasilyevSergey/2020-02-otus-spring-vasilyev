@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of meetings of book club</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        h3 {
+            padding: 20px;
+        }
+
+        .authors, .authors td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+    </style>
+    <script src="../../../../webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+</head>
+<body>
+<a href="/logout">logout</a>
+<br>
+<a  href="/">Назад к списку клубов</a>
+<h1>Meetings</h1>
+<table class="authors">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Theme</th>
+        <th>Date/Time</th>
+        <th>Book club</th>
+        <th>Address</th>
+        <th>Admin</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<H3>На карте</H3>
+<div id="yandexmap" style="width: 500px; height: 500px"></div>
+
+<script>
+    $(function () {
+        let pathname = window.location.pathname;
+        const arrayOfStrings = pathname.split("/");
+        const bookClubId = arrayOfStrings[2];
+
+        $.get('/api/v1/meeting/find-all-by-book-club/' + bookClubId).done(function (meetings) {
+            meetings.forEach(function (meeting) {
+                $('tbody').append(`
+                    <tr>
+                        <td>${meeting.id}</td>
+                        <td>${meeting.theme}</td>
+                        <td>${meeting.meetingsDateTime}</td>
+                        <td>${meeting.bookClub.name}</td>
+                        <td>${meeting.address}</td>
+                        <td>${meeting.admin.login}</td>
+                    </tr>
+                `);
+            });
+
+            // карта
+            function initMap () {
+                let map;
+                let marker;
+
+                // пока что хардкод
+                map = new ymaps.Map("yandexmap", {
+                    center: [55.751611, 37.609540],
+                    zoom: 17
+                });
+
+                meetings.forEach(function (meeting) {
+                    marker = new ymaps.Placemark([meeting.longitude, meeting.latitude], {
+                        hintContent: meeting.theme + '<br/>' + meeting.meetingsDateTime,
+                        balloonContent: meeting.address
+                    });
+
+                    map.geoObjects.add(marker)
+                });
+            }
+
+            ymaps.ready(initMap);
+        })
+    });
+</script>
+
+</body>
+</html>

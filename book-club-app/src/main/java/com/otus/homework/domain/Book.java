@@ -16,11 +16,11 @@ public class Book {
     @Id
     private String id;
 
-    @Field
+    @Field("title")
     private String title;
 
     @DBRef
-    @Field
+    @Field("author")
     private Author author;
 
     public Book(String title, Author author) {

@@ -19,38 +19,38 @@ public class Meeting {
     @Id
     private String id;
 
-    @Field
+    @Field("theme")
     private String theme;
 
-    @Field
+    @Field("meetingsDateTime")
     private LocalDateTime meetingsDateTime;
 
-    @Field
+    @Field("description")
     private String description;
 
     @DBRef
-    @Field
+    @Field("bookList")
     private List<Book> bookList;
 
     @DBRef
-    @Field
+    @Field("bookClub")
     private BookClub bookClub;
 
-    @Field
+    @Field("address")
     private String address;
 
-    @Field
+    @Field("longitude")
     private Double longitude;
 
-    @Field
+    @Field("latitude")
     private Double latitude;
 
     @DBRef
-    @Field
+    @Field("admin")
     private User admin;
 
     @DBRef
-    @Field
+    @Field("participantList")
     private List<User> participantList;
 
     public Meeting(String theme,

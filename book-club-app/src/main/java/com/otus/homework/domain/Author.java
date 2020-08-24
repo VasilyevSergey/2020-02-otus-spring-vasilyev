@@ -16,7 +16,7 @@ public class Author {
     @Id
     private String id;
 
-    @Field
+    @Field("name")
     private String name;
 
     public Author(String name) {

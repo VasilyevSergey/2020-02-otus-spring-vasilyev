@@ -26,7 +26,7 @@ public class BookClubRestController {
         return bookClubService.findAllByNameContaining(fragment);
     }
 
-    @GetMapping("api/v1/book-club/join/{id}")
+    @PostMapping("api/v1/book-club/{id}/users")
     public BookClub joinToClub(@PathVariable("id") String id) throws DataLoadingException {
         return bookClubService.joinToClub(id);
     }

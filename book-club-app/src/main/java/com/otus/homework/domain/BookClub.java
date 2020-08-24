@@ -18,18 +18,18 @@ public class BookClub {
     @Id
     private String id;
 
-    @Field
+    @Field("name")
     private String name;
 
-    @Field
+    @Field("mainTheme")
     private String mainTheme;
 
     @DBRef
-    @Field
+    @Field("admin")
     private User admin;
 
     @DBRef
-    @Field
+    @Field("participantList")
     private List<User> participantList;
 
     public BookClub(String name,

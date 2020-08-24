@@ -50,7 +50,7 @@ public class MeetingRestController {
         return meetingService.findAllByTheme(theme);
     }
 
-    @GetMapping("api/v1/meeting/join/{id}")
+    @PostMapping("api/v1/meeting/{id}/users")
     public MeetingDto joinToMeeting(@PathVariable("id") String id) throws DataLoadingException {
         return meetingService.joinToMeeting(id);
     }
